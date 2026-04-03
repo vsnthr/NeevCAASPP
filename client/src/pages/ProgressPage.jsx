@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getScoresSummary, getStats, resetScores } from '../api';
+import { getScoresSummary, getStats } from '../api';
 
 const DOMAIN_FULL = {
   NBT: 'Number & Operations: Base Ten',
@@ -13,7 +13,6 @@ export default function ProgressPage() {
   const [summary,    setSummary]    = useState([]);
   const [stats,      setStats]      = useState({});  // { [topic_id]: { total_questions, answered } }
   const [loading,    setLoading]    = useState(true);
-  const [confirming, setConfirming] = useState(false);
 
   const load = () => {
     setLoading(true);
@@ -30,12 +29,6 @@ export default function ProgressPage() {
   };
 
   useEffect(() => { load(); }, []);
-
-  const handleReset = async () => {
-    await resetScores();
-    setConfirming(false);
-    load();
-  };
 
   if (loading) return <div style={loadingMsg}>Loading progress…</div>;
 
@@ -78,19 +71,7 @@ export default function ProgressPage() {
               </span>
             </div>
           </div>
-          <button onClick={() => setConfirming(true)} style={resetBtn}>Reset All</button>
         </div>
-
-        {/* Reset confirmation */}
-        {confirming && (
-          <div style={confirmBox}>
-            <span>Reset all progress? This cannot be undone.</span>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button onClick={handleReset} style={confirmYes}>Yes, reset</button>
-              <button onClick={() => setConfirming(false)} style={confirmNo}>Cancel</button>
-            </div>
-          </div>
-        )}
 
         <div style={domainList}>
           {allDomains.map(domain => {
@@ -174,11 +155,6 @@ const headerRow    = { display: 'flex', alignItems: 'flex-start', justifyContent
 const pageTitle    = { margin: '0 0 8px', fontSize: 26, fontWeight: 700, color: '#111827' };
 const overallStats = { display: 'flex', gap: 10, flexWrap: 'wrap' };
 const statChip     = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 20, padding: '4px 14px', fontSize: 13 };
-const resetBtn     = { padding: '8px 16px', background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', flexShrink: 0 };
-
-const confirmBox = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 14, color: '#7c2d12' };
-const confirmYes = { padding: '6px 14px', background: '#dc2626', color: '#fff', border: 'none', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' };
-const confirmNo  = { padding: '6px 14px', background: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 13, cursor: 'pointer' };
 
 const domainList     = { display: 'flex', flexDirection: 'column', gap: 20 };
 const domainCard     = { background: '#fff', borderRadius: 14, boxShadow: '0 2px 8px rgba(0,0,0,0.07)', padding: '20px 24px' };
