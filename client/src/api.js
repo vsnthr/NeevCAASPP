@@ -26,6 +26,12 @@ export async function getDailyReview(date) {
   return res.json();
 }
 
+export async function getStats() {
+  const res = await fetch('/api/scores/stats');
+  if (!res.ok) throw new Error('Failed to fetch stats');
+  return res.json();
+}
+
 export async function resetScores() {
   const res = await fetch('/api/scores', { method: 'DELETE' });
   if (!res.ok) throw new Error('Failed to reset scores');

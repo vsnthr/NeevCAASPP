@@ -98,6 +98,28 @@ router.get('/daily', (req, res) => {
   }
 });
 
+// GET /api/scores/stats
+// Returns per-topic: total questions available and how many Neev has answered
+router.get('/stats', (req, res) => {
+  try {
+    const rows = db.prepare(`
+      SELECT s.id AS subject_id, s.name AS subject,
+             t.id AS topic_id,   t.name AS topic,
+             COUNT(DISTINCT q.id)                                        AS total_questions,
+             COUNT(DISTINCT sc.question_id)                              AS answered
+      FROM topics t
+      JOIN subjects  s  ON s.id = t.subject_id
+      JOIN questions q  ON q.topic_id = t.id AND q.active = 1 AND q.grade = 5 AND q.wrong_a IS NOT NULL
+      LEFT JOIN scores sc ON sc.question_id = q.id AND sc.user_id = ?
+      GROUP BY t.id
+      ORDER BY s.name ASC, t.name ASC
+    `).all(USER_ID);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
 // DELETE /api/scores  — reset all scores for Neev
 router.delete('/', (req, res) => {
   try {
