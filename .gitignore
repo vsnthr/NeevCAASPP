@@ -1,0 +1,5 @@
+node_modules/
+client/dist/
+server/data/neev.db
+.env
+.DS_Store
