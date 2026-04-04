@@ -1,9 +1,9 @@
 import { NavLink } from 'react-router-dom';
 
 const links = [
-  { to: '/',        label: 'Practice' },
-  { to: '/progress', label: 'Progress' },
-  { to: '/review',   label: 'Review'   },
+  { to: '/',         label: 'Practice'         },
+  { to: '/review',   label: 'Daily Review'     },
+  { to: '/progress', label: 'Overall Progress' },
 ];
 
 const todayStr = new Date().toLocaleDateString('en-US', {
