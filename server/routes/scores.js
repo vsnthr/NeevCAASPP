@@ -14,8 +14,8 @@ router.post('/', (req, res) => {
 
   try {
     const result = db.prepare(`
-      INSERT INTO scores (user_id, question_id, subject_id, topic_id, is_correct, time_seconds)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO scores (user_id, question_id, subject_id, topic_id, is_correct, time_seconds, answered_at)
+      VALUES (?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))
     `).run(USER_ID, question_id, subject_id, topic_id, is_correct ? 1 : 0, time_seconds ?? null);
 
     res.status(201).json({ id: result.lastInsertRowid });
@@ -74,7 +74,10 @@ router.get('/summary', (req, res) => {
 // GET /api/scores/daily?date=YYYY-MM-DD
 // Returns all questions answered on a given date with full question details
 router.get('/daily', (req, res) => {
-  const date = req.query.date || new Date().toISOString().slice(0, 10);
+  // Default to today in PDT (TZ is set to America/Los_Angeles in index.js)
+  const now = new Date();
+  const todayPDT = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const date = req.query.date || todayPDT;
 
   try {
     const rows = db.prepare(`
@@ -88,7 +91,7 @@ router.get('/daily', (req, res) => {
       JOIN subjects  s ON s.id = sc.subject_id
       JOIN topics    t ON t.id = sc.topic_id
       WHERE sc.user_id = ?
-        AND date(sc.answered_at) = date(?)
+        AND date(sc.answered_at, 'localtime') = date(?)
       ORDER BY sc.answered_at ASC
     `).all(USER_ID, date);
 

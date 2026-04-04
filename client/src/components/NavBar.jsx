@@ -6,6 +6,11 @@ const links = [
   { to: '/review',   label: 'Review'   },
 ];
 
+const todayStr = new Date().toLocaleDateString('en-US', {
+  timeZone: 'America/Los_Angeles',
+  weekday: 'short', month: 'short', day: 'numeric',
+});
+
 export default function NavBar() {
   return (
     <nav style={nav}>
@@ -13,6 +18,7 @@ export default function NavBar() {
         <span style={brand}>Neev's CAASPP Math</span>
         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 400 }}>v{__APP_VERSION__}</span>
       </NavLink>
+      <span style={dateChip}>{todayStr}</span>
       <div style={linkRow}>
         {links.map(({ to, label }) => (
           <NavLink
@@ -42,8 +48,9 @@ const nav = {
   padding: '0 32px', zIndex: 1000,
   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 };
-const brand   = { fontSize: 20, fontWeight: 700, color: '#ffffff', letterSpacing: '-0.3px' };
-const linkRow = { display: 'flex', gap: 8 };
+const brand    = { fontSize: 20, fontWeight: 700, color: '#ffffff', letterSpacing: '-0.3px' };
+const dateChip = { fontSize: 12, color: 'rgba(255,255,255,0.85)', background: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: '3px 12px', fontWeight: 500, position: 'absolute', left: '50%', transform: 'translateX(-50%)' };
+const linkRow  = { display: 'flex', gap: 8 };
 const linkBase = {
   padding: '6px 12px', textDecoration: 'none', fontSize: 14,
   borderRadius: 6, transition: 'all 0.2s ease', paddingBottom: 4,
