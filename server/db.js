@@ -58,6 +58,9 @@ db.exec(`
 // ── Seed: single user ─────────────────────────────────────────────────────────
 db.prepare('INSERT OR IGNORE INTO users (id, name, age, email) VALUES (1, ?, 11, ?)').run('Neev', 'neev@local');
 
+// ── Unique index on questions (prevents re-insertion on server restart) ───────
+db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_questions_unique ON questions(topic_id, question)');
+
 // ── Seed helpers ──────────────────────────────────────────────────────────────
 const insertSubject = db.prepare('INSERT OR IGNORE INTO subjects (name) VALUES (?)');
 const getSubjectId  = db.prepare('SELECT id FROM subjects WHERE name = ?');
