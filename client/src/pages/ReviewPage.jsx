@@ -7,7 +7,8 @@ function fmt(dateStr) {
 }
 
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  // Use PDT/PST — toISOString() is always UTC and would show the wrong date after 5pm PDT
+  return new Date().toLocaleDateString('sv', { timeZone: 'America/Los_Angeles' });
 }
 
 export default function ReviewPage() {
