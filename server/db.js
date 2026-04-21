@@ -797,11 +797,11 @@ seedQ('G', '2D Figure Classification',
 // ── NBT: Place Value & Decimals ───────────────────────────────────────────────
 seedQ('NBT', 'Place Value & Decimals',
   'The value of the 4 in 3.045 is how many times the value of the 4 in 3.450?',
-  '1/100',
   '1/10',
+  '1/100',
   '10',
   '100',
-  'In 3.045 the 4 is in the thousandths place (0.004). In 3.450 the 4 is in the tenths place (0.4). 0.004 ÷ 0.4 = 1/100.'
+  'In 3.045 the 4 is in the hundredths place (0.04). In 3.450 the 4 is in the tenths place (0.4). 0.04 ÷ 0.4 = 0.1 = 1/10.'
 );
 seedQ('NBT', 'Place Value & Decimals',
   'What is the value of the expression: (4 × 10²) + (7 × 10⁰) + (3 × 10⁻¹) + (5 × 10⁻³)?',
@@ -2023,6 +2023,1032 @@ seedQ('G', '2D Figure Classification',
   '4',
   'A regular hexagon has 6 lines of symmetry: 3 through opposite vertices and 3 through midpoints of opposite sides.'
 );
+
+// ═════════════════════════════════════════════════════════════════════════════
+// BATCH 3 — 120 targeted questions for Neev's 6 weakest topics (April 2026)
+// Distribution per topic: 10 HIGH, 5 MEDIUM, 5 VERY HIGH
+// ═════════════════════════════════════════════════════════════════════════════
+
+// ── MD / Line Plots with Fractions (20) ─────────────────────────────────────
+// [MEDIUM]
+seedQ('MD', 'Line Plots with Fractions',
+  'Ribbon lengths (ft) on a line plot: 1/4, 1/2, 1/2, 3/4, 1. What is the mode?',
+  '1/2 ft',
+  '1/4 ft',
+  '3/4 ft',
+  '1 ft',
+  'The mode is the most frequent value. 1/2 appears twice; every other value appears once.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Values on a line plot (in): 1/8, 1/4, 1/2, 3/4, 7/8. What is the range?',
+  '3/4 in',
+  '7/8 in',
+  '1/2 in',
+  '5/8 in',
+  'Range = greatest − least = 7/8 − 1/8 = 6/8 = 3/4.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Seven pencils measured (in): 1/4, 1/4, 1/2, 1/2, 1/2, 3/4, 1. What is the median?',
+  '1/2 in',
+  '1/4 in',
+  '3/4 in',
+  '1 in',
+  'With 7 values sorted, the median is the 4th value, which is 1/2.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Data (cm): 1/4, 1/4, 1/3, 1/2, 1/2, 3/4. How many pieces measure LESS THAN 1/2?',
+  '3',
+  '2',
+  '4',
+  '5',
+  'Pieces less than 1/2: 1/4, 1/4, and 1/3 → 3 pieces. (1/2 is not less than 1/2.)'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Five sticks each 1/4 foot long. What is the total length?',
+  '1 1/4 ft',
+  '5/8 ft',
+  '1 ft',
+  '1 1/2 ft',
+  '5 × 1/4 = 5/4 = 1 1/4 ft.'
+);
+
+// [HIGH]
+seedQ('MD', 'Line Plots with Fractions',
+  'Plant heights on a line plot (ft): 1/2, 3/8, 1/4, 1/8, 3/4. What is the total height?',
+  '2 ft',
+  '1 3/4 ft',
+  '1 7/8 ft',
+  '2 1/4 ft',
+  'LCD = 8: 4/8 + 3/8 + 2/8 + 1/8 + 6/8 = 16/8 = 2.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Data (cups): 1/2, 1/3, 1/6, 1/4. What is the total?',
+  '1 1/4 cups',
+  '1 1/3 cups',
+  '1 1/6 cups',
+  '1 1/2 cups',
+  'LCD = 12: 6/12 + 4/12 + 2/12 + 3/12 = 15/12 = 1 3/12 = 1 1/4.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Five measurements total 3 1/2 ft. Four of them are 1/2, 3/4, 1, and 1/4. What is the fifth?',
+  '1 ft',
+  '3/4 ft',
+  '1/2 ft',
+  '1 1/4 ft',
+  'Sum of known: 1/2 + 3/4 + 1 + 1/4 = 2 1/2. Missing = 3 1/2 − 2 1/2 = 1.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'On a line plot of {1/4, 1/2, 3/4, 5/8, 1/8, 7/8}, what is the sum of only the values GREATER than 1/2?',
+  '2 1/4',
+  '1 7/8',
+  '2 1/2',
+  '1 3/4',
+  'Values > 1/2: 3/4, 5/8, 7/8. LCD = 8: 6/8 + 5/8 + 7/8 = 18/8 = 2 1/4.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Data (ft): 1/2, 1/4, 1/4, 1/2, 1/2. The total length of ribbon is shared equally among 4 students. How much does each get?',
+  '1/2 ft',
+  '3/8 ft',
+  '5/8 ft',
+  '1/4 ft',
+  'Sum = 2/4 + 1/4 + 1/4 + 2/4 + 2/4 = 8/4 = 2 ft. Divide by 4: 2 ÷ 4 = 1/2 ft each.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Four cups of water measured: 1/2, 1/4, 3/4, 1/2. What is the mean (average)?',
+  '1/2 cup',
+  '3/8 cup',
+  '3/4 cup',
+  '5/8 cup',
+  'Sum = 2/4 + 1/4 + 3/4 + 2/4 = 8/4 = 2. Mean = 2 ÷ 4 = 1/2.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Data (mi): 1/8, 1/8, 1/4, 1/4, 1/4, 3/8, 1/2, 1/2. What is the difference between the median and the mode?',
+  '0 (they are equal)',
+  '1/8',
+  '1/4',
+  '3/8',
+  'Sorted, 8 values — median = (4th + 5th)/2 = (1/4 + 1/4)/2 = 1/4. Mode = 1/4 (appears 3 times). Difference = 0.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Three rods measured: 1 1/2, 2 3/4, 1 1/4 feet. What is their total length?',
+  '5 1/2 ft',
+  '4 3/4 ft',
+  '5 1/4 ft',
+  '5 ft',
+  'Whole parts: 1+2+1 = 4. Fraction parts: 1/2 + 3/4 + 1/4 = 2/4 + 3/4 + 1/4 = 6/4 = 1 1/2. Total = 4 + 1 1/2 = 5 1/2.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Five bottles of water: 2/3, 1/3, 1/6, 1/2, 1/6 liters. What is the total?',
+  '1 5/6 L',
+  '1 2/3 L',
+  '2 L',
+  '1 1/2 L',
+  'LCD = 6: 4/6 + 2/6 + 1/6 + 3/6 + 1/6 = 11/6 = 1 5/6.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Data on a line plot (yd): 3/8, 1/2, 5/8, 1/4, 3/4. Find the total.',
+  '2 1/2 yd',
+  '2 1/4 yd',
+  '2 3/8 yd',
+  '2 3/4 yd',
+  'LCD = 8: 3/8 + 4/8 + 5/8 + 2/8 + 6/8 = 20/8 = 2 1/2.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Six seedlings grew (in): 1/4, 3/8, 1/2, 1/4, 5/8, 1/8. What is the difference between the longest and shortest growth?',
+  '1/2 in',
+  '3/8 in',
+  '5/8 in',
+  '3/4 in',
+  'Longest = 5/8, shortest = 1/8. Difference = 4/8 = 1/2.'
+);
+
+// [VERY HIGH]
+seedQ('MD', 'Line Plots with Fractions',
+  'Line plot (cm): 1/8, 1/4, 3/8, 1/2, 5/8, 3/4. Mia keeps all pieces SHORTER than 5/8 cm. What is the total length she keeps?',
+  '1 1/4 cm',
+  '1 3/8 cm',
+  '7/8 cm',
+  '1 1/8 cm',
+  'Pieces < 5/8: 1/8, 1/4, 3/8, 1/2. LCD = 8: 1/8 + 2/8 + 3/8 + 4/8 = 10/8 = 1 1/4.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Five ribbons (ft): 1/4, 1/3, 1/2, 1/6, 1/4. What is the total length expressed in INCHES? (1 ft = 12 in)',
+  '18 inches',
+  '12 inches',
+  '24 inches',
+  '16 inches',
+  'LCD = 12: 3/12 + 4/12 + 6/12 + 2/12 + 3/12 = 18/12 = 1 1/2 ft. 1 1/2 × 12 = 18 inches.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'The mean of 4 values from a line plot is 1/2. Three of the values are 1/4, 1/2, and 3/8. What is the fourth?',
+  '7/8',
+  '5/8',
+  '3/4',
+  '1',
+  'Total = 4 × 1/2 = 2. Known = 2/8 + 4/8 + 3/8 = 9/8. Fourth = 2 − 9/8 = 16/8 − 9/8 = 7/8.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Eight students measured ribbons (ft): 1/4, 1/4, 1/2, 3/8, 5/8, 1/2, 1/4, 3/8. Jen uses ONLY the ribbons measuring AT MOST 1/4 ft. Total length Jen uses?',
+  '3/4 ft',
+  '1/2 ft',
+  '1 ft',
+  '5/8 ft',
+  'Ribbons ≤ 1/4: three 1/4s. Total = 3 × 1/4 = 3/4 ft.'
+);
+seedQ('MD', 'Line Plots with Fractions',
+  'Line plot: three at 1/8, two at 3/8, four at 1/2, one at 7/8. What is the total of ALL values?',
+  '4',
+  '3 7/8',
+  '4 1/4',
+  '3 1/2',
+  'Weighted sum in eighths: 3(1/8) + 2(3/8) + 4(4/8) + 1(7/8) = 3/8 + 6/8 + 16/8 + 7/8 = 32/8 = 4.'
+);
+
+// ── MD / Volume (20) ────────────────────────────────────────────────────────
+// [MEDIUM]
+seedQ('MD', 'Volume',
+  'A rectangular prism has length 6 cm, width 4 cm, height 3 cm. What is its volume?',
+  '72 cm³',
+  '52 cm³',
+  '84 cm³',
+  '13 cm³',
+  'V = L × W × H = 6 × 4 × 3 = 72.'
+);
+seedQ('MD', 'Volume',
+  'A box has volume 60 cm³, length 5 cm, width 3 cm. What is its height?',
+  '4 cm',
+  '12 cm',
+  '8 cm',
+  '15 cm',
+  'V = L × W × H → 60 = 5 × 3 × H → 60 = 15H → H = 4.'
+);
+seedQ('MD', 'Volume',
+  'A cube has side length 5 in. What is its volume?',
+  '125 in³',
+  '25 in³',
+  '15 in³',
+  '150 in³',
+  'V of cube = s³ = 5 × 5 × 5 = 125.'
+);
+seedQ('MD', 'Volume',
+  'Two connected rectangular boxes have dimensions 3×2×2 and 4×2×1. What is the total combined volume?',
+  '20 cubic units',
+  '14 cubic units',
+  '24 cubic units',
+  '12 cubic units',
+  'Box 1: 3×2×2 = 12. Box 2: 4×2×1 = 8. Total = 12 + 8 = 20.'
+);
+seedQ('MD', 'Volume',
+  'A box is 2 layers tall, and each layer has 3 rows of 4 unit cubes. What is the volume?',
+  '24 cubic units',
+  '12 cubic units',
+  '14 cubic units',
+  '9 cubic units',
+  '2 × 3 × 4 = 24 unit cubes.'
+);
+
+// [HIGH]
+seedQ('MD', 'Volume',
+  'A rectangular prism has dimensions 2.5 ft × 4 ft × 6 ft. Find the volume.',
+  '60 ft³',
+  '30 ft³',
+  '48 ft³',
+  '12.5 ft³',
+  'V = 2.5 × 4 × 6 = 60 ft³.'
+);
+seedQ('MD', 'Volume',
+  'A tank is 5 ft × 3 ft × 4 ft and is 3/4 full. What is the volume of water it contains?',
+  '45 ft³',
+  '60 ft³',
+  '40 ft³',
+  '15 ft³',
+  'Tank volume = 60 ft³. Water = 3/4 × 60 = 45 ft³.'
+);
+seedQ('MD', 'Volume',
+  'A cube has surface area 150 cm². What is its volume?',
+  '125 cm³',
+  '150 cm³',
+  '75 cm³',
+  '216 cm³',
+  '6 faces, each of area 150/6 = 25 cm². Side = √25 = 5. Volume = 5³ = 125.'
+);
+seedQ('MD', 'Volume',
+  'If every dimension of a rectangular prism is doubled, the new volume is how many times the original?',
+  '8 times',
+  '2 times',
+  '4 times',
+  '6 times',
+  'Each dimension ×2: V_new = 2 × 2 × 2 × V_old = 8 × V_old.'
+);
+seedQ('MD', 'Volume',
+  'A closed rectangular cardboard box has outer dimensions 20 cm × 10 cm × 8 cm. The cardboard is 1 cm thick. What is the interior volume?',
+  '864 cm³',
+  '1600 cm³',
+  '1000 cm³',
+  '720 cm³',
+  'Each dimension loses 2 cm (1 cm per wall × 2 walls). Interior: 18 × 8 × 6 = 864.'
+);
+seedQ('MD', 'Volume',
+  'A cube has volume 216 in³. What is its side length?',
+  '6 in',
+  '8 in',
+  '5 in',
+  '12 in',
+  'Side = ∛216 = 6 (since 6×6×6 = 216).'
+);
+seedQ('MD', 'Volume',
+  'Box A is 2×3×4. Box B is 4×6×8 (every dimension doubled). How many times greater is B\u2019s volume than A\u2019s?',
+  '8 times',
+  '2 times',
+  '4 times',
+  '6 times',
+  'A = 24. B = 192. 192/24 = 8. (Equivalent to scale factor 2³.)'
+);
+seedQ('MD', 'Volume',
+  'A warehouse floor is 60 ft × 40 ft, and boxes can stack up to 8 ft high. Each box is 4 ft × 3 ft × 2 ft. What is the maximum number of boxes that fit?',
+  '800',
+  '600',
+  '900',
+  '1000',
+  'Warehouse volume = 60 × 40 × 8 = 19,200 ft³. Box volume = 24 ft³. 19,200 ÷ 24 = 800.'
+);
+seedQ('MD', 'Volume',
+  'An L-shaped solid is made of two rectangular prisms: one 5×4×3 and one 2×4×3 connected along a face. What is the total volume?',
+  '84 cubic units',
+  '60 cubic units',
+  '144 cubic units',
+  '108 cubic units',
+  '60 + 24 = 84 cubic units.'
+);
+seedQ('MD', 'Volume',
+  'A rectangular prism has volume 144 in³, length 6 in, and width 4 in. What is its height?',
+  '6 in',
+  '4 in',
+  '8 in',
+  '12 in',
+  'V = L × W × H → 144 = 6 × 4 × H = 24H → H = 6.'
+);
+
+// [VERY HIGH]
+seedQ('MD', 'Volume',
+  'Each dimension of a rectangular prism is scaled by 1.5. If the original volume is 80 cm³, what is the new volume?',
+  '270 cm³',
+  '120 cm³',
+  '180 cm³',
+  '320 cm³',
+  'Volume scales by (1.5)³ = 3.375. New V = 80 × 3.375 = 270.'
+);
+seedQ('MD', 'Volume',
+  'Box A has dimensions 8 × 6 × 5. Box B has every dimension 50% larger. How many times greater is Box B\u2019s volume than Box A\u2019s?',
+  '3.375 times greater',
+  '1.5 times greater',
+  '4.5 times greater',
+  '2.25 times greater',
+  'Scaling each side by 1.5 multiplies volume by 1.5³ = 3.375. (A = 240, B = 12 × 9 × 7.5 = 810; 810/240 = 3.375.)'
+);
+seedQ('MD', 'Volume',
+  'A closed box has outer dimensions 20 × 10 × 8 cm with walls 1 cm thick. How much EMPTY interior space does it have?',
+  '864 cm³',
+  '736 cm³',
+  '1600 cm³',
+  '960 cm³',
+  'Interior dims: 18 × 8 × 6 = 864 cm³.'
+);
+seedQ('MD', 'Volume',
+  'A container is 10 × 6 × 4 units. How many 2 × 2 × 2 cubes fit inside exactly?',
+  '30',
+  '24',
+  '15',
+  '60',
+  'Divide each dimension by 2: 5 × 3 × 2 = 30 cubes.'
+);
+seedQ('MD', 'Volume',
+  'A tank measures 4 m × 3 m × 2 m and is completely full. Water drains at 6 m³ per hour. How long will it take to empty?',
+  '4 hours',
+  '3 hours',
+  '6 hours',
+  '2 hours',
+  'Volume = 4 × 3 × 2 = 24 m³. Time = 24 ÷ 6 = 4 hours.'
+);
+
+// ── MD / Measurement Conversions (20) ───────────────────────────────────────
+// [MEDIUM]
+seedQ('MD', 'Measurement Conversions',
+  'Convert 5 km to meters.',
+  '5,000 m',
+  '500 m',
+  '50,000 m',
+  '50 m',
+  '1 km = 1,000 m, so 5 km = 5,000 m.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Convert 3.2 L to milliliters.',
+  '3,200 mL',
+  '320 mL',
+  '32 mL',
+  '32,000 mL',
+  '1 L = 1,000 mL, so 3.2 × 1,000 = 3,200 mL.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Convert 4 lb to ounces. (1 lb = 16 oz)',
+  '64 oz',
+  '48 oz',
+  '20 oz',
+  '40 oz',
+  '4 × 16 = 64 oz.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Convert 3 hours to minutes.',
+  '180 min',
+  '120 min',
+  '90 min',
+  '300 min',
+  '1 hr = 60 min, so 3 × 60 = 180.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Convert 250 cm to meters.',
+  '2.5 m',
+  '25 m',
+  '0.25 m',
+  '2.05 m',
+  '1 m = 100 cm, so 250 ÷ 100 = 2.5 m.'
+);
+
+// [HIGH]
+seedQ('MD', 'Measurement Conversions',
+  'Convert 3.5 km to cm.',
+  '350,000 cm',
+  '35,000 cm',
+  '3,500 cm',
+  '3,500,000 cm',
+  '1 km = 1,000 m = 100,000 cm. 3.5 × 100,000 = 350,000 cm.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'A faucet drips 1 cup every 10 minutes. How many gallons are wasted in one week? (1 gal = 16 cups)',
+  '63 gal',
+  '42 gal',
+  '84 gal',
+  '56 gal',
+  'One week = 7 × 24 × 60 = 10,080 min. Cups: 10,080 ÷ 10 = 1,008. Gallons: 1,008 ÷ 16 = 63.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Tom drinks 5 cups of water a day. How many fluid ounces is that? (1 cup = 8 fl oz)',
+  '40 fl oz',
+  '32 fl oz',
+  '45 fl oz',
+  '50 fl oz',
+  '5 × 8 = 40 fl oz.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'A runner averages 8 minutes per mile. How long does it take to run a 5K (3.1 miles)?',
+  'About 24 minutes 48 seconds',
+  'About 26 minutes',
+  'About 25 minutes',
+  'About 30 minutes',
+  '8 × 3.1 = 24.8 min = 24 min + 0.8 × 60 sec = 24 min 48 sec.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'A distance is 2 km 450 m. What is that in meters?',
+  '2,450 m',
+  '2,045 m',
+  '245 m',
+  '2.45 m',
+  '2 km = 2,000 m. 2,000 + 450 = 2,450 m.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Convert 2.5 feet to inches.',
+  '30 inches',
+  '25 inches',
+  '36 inches',
+  '20 inches',
+  '1 ft = 12 in. 2.5 × 12 = 30.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Convert 48 ounces to pounds. (1 lb = 16 oz)',
+  '3 lb',
+  '4 lb',
+  '2 lb',
+  '6 lb',
+  '48 ÷ 16 = 3.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Convert 7,200 seconds to hours.',
+  '2 hours',
+  '3 hours',
+  '1 hour',
+  '4 hours',
+  '1 hour = 3,600 sec. 7,200 ÷ 3,600 = 2.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Convert 3 gallons to fluid ounces. (1 gal = 128 fl oz)',
+  '384 fl oz',
+  '256 fl oz',
+  '48 fl oz',
+  '480 fl oz',
+  '3 × 128 = 384 fl oz.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Convert 2 days to seconds.',
+  '172,800 seconds',
+  '86,400 seconds',
+  '17,280 seconds',
+  '1,728,000 seconds',
+  '1 day = 24 × 3,600 = 86,400 sec. 2 × 86,400 = 172,800.'
+);
+
+// [VERY HIGH]
+seedQ('MD', 'Measurement Conversions',
+  'A runner trains at 8 min per mile. How long will it take to run a 10 km race? (1 mile ≈ 1.609 km)',
+  'About 49 minutes 43 seconds',
+  'About 80 minutes',
+  'About 48 minutes',
+  'About 55 minutes',
+  '10 km ÷ 1.609 ≈ 6.2137 miles. Time = 8 × 6.2137 ≈ 49.71 min ≈ 49 min 43 sec.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'A family uses 8 cups of water per day. About how many gallons is that in one year (365 days)? (1 gal = 16 cups)',
+  '182.5 gallons',
+  '365 gallons',
+  '45.6 gallons',
+  '91.25 gallons',
+  'Cups/year = 8 × 365 = 2,920. Gallons = 2,920 ÷ 16 = 182.5.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'A tank holds 3 gallons. A pipe fills it at a rate of 2 cups per minute. How long does it take to fill? (1 gal = 16 cups)',
+  '24 minutes',
+  '12 minutes',
+  '48 minutes',
+  '30 minutes',
+  '3 gal = 48 cups. 48 ÷ 2 = 24 minutes.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'Add these lengths and express in km: 3.5 km + 450 m + 25,000 cm.',
+  '4.2 km',
+  '3.95 km',
+  '4.7 km',
+  '4.8 km',
+  '450 m = 0.45 km. 25,000 cm = 250 m = 0.25 km. Total = 3.5 + 0.45 + 0.25 = 4.2 km.'
+);
+seedQ('MD', 'Measurement Conversions',
+  'A car uses 1 gallon of gas per 28 miles. How many quarts of gas are needed for 112 miles? (1 gal = 4 qt)',
+  '16 quarts',
+  '4 quarts',
+  '8 quarts',
+  '28 quarts',
+  '112 ÷ 28 = 4 gallons. 4 × 4 = 16 quarts.'
+);
+
+// ── NBT / Place Value & Decimals (20) ───────────────────────────────────────
+// [MEDIUM]
+seedQ('NBT', 'Place Value & Decimals',
+  'In the number 3.052, what is the value of the digit 5?',
+  '5 hundredths (0.05)',
+  '5 tenths (0.5)',
+  '5 thousandths (0.005)',
+  '5 (five)',
+  'The 5 sits in the hundredths place, so its value is 5 × 0.01 = 0.05.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'How is 4.26 written in words?',
+  'Four and twenty-six hundredths',
+  'Four and twenty-six tenths',
+  'Four point twenty-six',
+  'Four and two hundred six hundredths',
+  '4.26 = 4 + 26/100 = four and twenty-six hundredths.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'What place is the digit 7 in the number 0.037?',
+  'Thousandths',
+  'Hundredths',
+  'Tenths',
+  'Ten-thousandths',
+  'Three positions after the decimal: tenths, hundredths, thousandths. So 7 is in thousandths.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Write "six and five tenths" in standard form.',
+  '6.5',
+  '65',
+  '0.65',
+  '6.05',
+  'Six = 6. Five tenths = 0.5. Together: 6.5.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Which statement is TRUE? 0.4 __ 0.40',
+  '0.4 = 0.40 (they are equal)',
+  '0.4 < 0.40',
+  '0.4 > 0.40',
+  'Cannot compare',
+  '0.40 is 0.4 with an extra 0 in the hundredths place, which adds no value. They are equal.'
+);
+
+// [HIGH]
+seedQ('NBT', 'Place Value & Decimals',
+  'The value of the digit 3 in 3.4 is how many times the value of the digit 3 in 0.34?',
+  '10 times',
+  '100 times',
+  '1/10',
+  '1 time (same)',
+  '3 in 3.4 has value 3. 3 in 0.34 has value 0.3. 3 ÷ 0.3 = 10.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Order from LEAST to GREATEST: 0.5, 0.55, 0.505, 0.055',
+  '0.055, 0.5, 0.505, 0.55',
+  '0.055, 0.5, 0.55, 0.505',
+  '0.5, 0.055, 0.505, 0.55',
+  '0.505, 0.055, 0.5, 0.55',
+  'Line up place values: 0.055, 0.500, 0.505, 0.550. In order: 0.055, 0.5, 0.505, 0.55.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Round 7.846 to the nearest tenth.',
+  '7.8',
+  '7.9',
+  '8.0',
+  '7.85',
+  'Look at the hundredths digit (4). Since 4 < 5, round down. 7.846 → 7.8.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Round 0.0648 to the nearest hundredth.',
+  '0.06',
+  '0.07',
+  '0.065',
+  '0.1',
+  'Look at the thousandths digit (4). 4 < 5, round down. 0.0648 → 0.06.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Write 406.23 in expanded form.',
+  '400 + 6 + 0.2 + 0.03',
+  '400 + 60 + 2 + 0.3',
+  '4 + 0 + 6 + 2 + 3',
+  '400 + 6 + 0.02 + 0.003',
+  '406.23 = 4 hundreds + 0 tens + 6 ones + 2 tenths + 3 hundredths = 400 + 6 + 0.2 + 0.03.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'The value of the 2 in 200 is how many times the value of the 2 in 0.2?',
+  '1,000 times',
+  '100 times',
+  '10 times',
+  '10,000 times',
+  '200 ÷ 0.2 = 1,000.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Order from LEAST to GREATEST: 3.09, 3.9, 3.091, 3.19',
+  '3.09, 3.091, 3.19, 3.9',
+  '3.09, 3.19, 3.091, 3.9',
+  '3.09, 3.091, 3.9, 3.19',
+  '3.9, 3.19, 3.091, 3.09',
+  'Aligned: 3.090, 3.900, 3.091, 3.190. Ordered: 3.090, 3.091, 3.190, 3.900.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'The value of the 4 in 3.045 is what fraction of the value of the 4 in 3.450?',
+  '1/10',
+  '1/100',
+  '1/1,000',
+  '1 (same value)',
+  '3.045: 4 is in hundredths (0.04). 3.450: 4 is in tenths (0.4). 0.04 ÷ 0.4 = 0.1 = 1/10.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'The value of the 7 in 74 is how many times the value of the 7 in 0.7?',
+  '100 times',
+  '10 times',
+  '1,000 times',
+  '70 times',
+  '7 in 74 = 70. 7 in 0.7 = 0.7. 70 ÷ 0.7 = 100.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Which decimal lies between 0.3 and 0.4?',
+  '0.35',
+  '0.03',
+  '0.45',
+  '3.5',
+  '0.35 is greater than 0.30 and less than 0.40, so it lies between them.'
+);
+
+// [VERY HIGH]
+seedQ('NBT', 'Place Value & Decimals',
+  'The value of the digit 6 in 6,400 is how many times the value of the digit 6 in 0.06?',
+  '100,000 times',
+  '10,000 times',
+  '1,000,000 times',
+  '1,000 times',
+  '6 in 6,400 = 6,000. 6 in 0.06 = 0.06. 6,000 ÷ 0.06 = 100,000.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Order from LEAST to GREATEST: 2.305, 2.35, 2.053, 2.3, 2.53',
+  '2.053, 2.3, 2.305, 2.35, 2.53',
+  '2.053, 2.305, 2.3, 2.35, 2.53',
+  '2.053, 2.3, 2.35, 2.305, 2.53',
+  '2.3, 2.053, 2.305, 2.35, 2.53',
+  'Aligned: 2.053, 2.300, 2.305, 2.350, 2.530. In that order.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'Round 5.4949 to the nearest hundredth.',
+  '5.49',
+  '5.50',
+  '5.495',
+  '5.5',
+  'Look at the thousandths digit: 4. Since 4 < 5, round DOWN. 5.4949 → 5.49. (Do not cascade round; look only at the next digit.)'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'The value of the 8 in 81,000 is how many times the value of the 8 in 0.008?',
+  '10,000,000 times',
+  '1,000,000 times',
+  '100,000,000 times',
+  '100,000 times',
+  '8 in 81,000 = 80,000. 8 in 0.008 = 0.008. 80,000 ÷ 0.008 = 10,000,000.'
+);
+seedQ('NBT', 'Place Value & Decimals',
+  'A digit\u2019s position moves two places to the right (e.g., from ones to hundredths). Its new value is what fraction of its original value?',
+  '1/100',
+  '1/10',
+  '1/1,000',
+  '1/20',
+  'Each place right makes the value 1/10 as much. Two places: 1/10 × 1/10 = 1/100.'
+);
+
+// ── NF / Fraction Word Problems (20) ────────────────────────────────────────
+// [MEDIUM]
+seedQ('NF', 'Fraction Word Problems',
+  'Nina runs 1/2 mile each day. How far does she run in 5 days?',
+  '2 1/2 miles',
+  '2 miles',
+  '3 miles',
+  '5/10 miles',
+  '1/2 × 5 = 5/2 = 2 1/2 miles.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'There are 9 cookies. Ali eats 2/3 of them. How many cookies did he eat?',
+  '6 cookies',
+  '3 cookies',
+  '4 cookies',
+  '9 cookies',
+  '2/3 × 9 = 18/3 = 6.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A pizza has 8 equal slices. Jo ate 3 slices. What fraction of the pizza is LEFT?',
+  '5/8',
+  '3/8',
+  '1/2',
+  '3/5',
+  '8 − 3 = 5 slices left out of 8 → 5/8.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'Mia ran 3/4 mile in the morning and 1/2 mile after school. How far did she run in total?',
+  '1 1/4 miles',
+  '1 miles',
+  '1 1/2 miles',
+  '3/8 miles',
+  '3/4 + 1/2 = 3/4 + 2/4 = 5/4 = 1 1/4.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A recipe uses 1/3 cup of sugar per batch. How much sugar is needed for 3 batches?',
+  '1 cup',
+  '2/3 cup',
+  '3/3 cup (= 0.9)',
+  '1 1/3 cups',
+  '1/3 × 3 = 3/3 = 1 cup.'
+);
+
+// [HIGH]
+seedQ('NF', 'Fraction Word Problems',
+  'Carlos spent 2/5 of his allowance on a book and 1/4 on snacks. What fraction of his allowance is LEFT?',
+  '7/20',
+  '3/9',
+  '13/20',
+  '3/4',
+  'LCD = 20: book 8/20 + snacks 5/20 = 13/20 spent. Left = 1 − 13/20 = 20/20 − 13/20 = 7/20.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'Nina runs 3/4 mile each day. How many days will it take her to run a total of 6 miles?',
+  '8 days',
+  '6 days',
+  '9 days',
+  '4 1/2 days',
+  '6 ÷ 3/4 = 6 × 4/3 = 24/3 = 8 days.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A pool holds 4,500 gallons when full. It is currently 7/10 full. After a party, 1/6 of THAT water evaporates. How many gallons remain?',
+  '2,625 gallons',
+  '3,150 gallons',
+  '525 gallons',
+  '750 gallons',
+  'Start water: 7/10 × 4,500 = 3,150. Evaporate 1/6: 3,150 × 1/6 = 525. Remaining: 3,150 − 525 = 2,625.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A 6-foot board must be cut into pieces each exactly 3/4 foot long with no waste. The pieces are sold in groups of 4. How many complete groups can be made?',
+  '2 groups',
+  '3 groups',
+  '4 groups',
+  '8 groups',
+  'Number of pieces: 6 ÷ 3/4 = 8 pieces. Groups of 4: 8 ÷ 4 = 2.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'Carla had $60. She spent 1/3 on lunch and 1/4 on the bus. How much money does she have LEFT?',
+  '$25',
+  '$35',
+  '$20',
+  '$45',
+  'Spent = 1/3 + 1/4 = 4/12 + 3/12 = 7/12. Left = 5/12. 5/12 × 60 = 25.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A trail is 5 1/4 miles long. A hiker walked 2 3/4 miles. How far does she have LEFT?',
+  '2 1/2 miles',
+  '2 3/4 miles',
+  '3 miles',
+  '8 miles',
+  '5 1/4 − 2 3/4 = 21/4 − 11/4 = 10/4 = 2 1/2.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A wall is painted 1/3 red and 1/4 blue. The rest is white. What fraction is white?',
+  '5/12',
+  '7/12',
+  '1/12',
+  '2/7',
+  'Red + blue = 4/12 + 3/12 = 7/12. White = 1 − 7/12 = 5/12.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A recipe makes 2 3/4 cups of batter. How much batter will 3 recipes make?',
+  '8 1/4 cups',
+  '6 3/4 cups',
+  '7 1/4 cups',
+  '5 1/2 cups',
+  '2 3/4 × 3 = 11/4 × 3 = 33/4 = 8 1/4.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A school bus drives 3/8 mile between stops. If it makes 12 stops in one route, what is the total distance?',
+  '4 1/2 miles',
+  '3 6/8 miles',
+  '5 miles',
+  '36/8 miles (= 4)',
+  '3/8 × 12 = 36/8 = 4 4/8 = 4 1/2.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A class has 24 students. 3/8 of them are boys. How many are girls?',
+  '15 girls',
+  '9 girls',
+  '16 girls',
+  '8 girls',
+  'Boys = 3/8 × 24 = 9. Girls = 24 − 9 = 15. (Or 5/8 × 24 = 15.)'
+);
+
+// [VERY HIGH]
+seedQ('NF', 'Fraction Word Problems',
+  'Amy has $48. She spends 1/4 on a book, then spends 1/2 of the remaining money on food. How much does she have LEFT?',
+  '$18',
+  '$24',
+  '$12',
+  '$6',
+  'After book: 48 × 3/4 = 36. After food: 36 × 1/2 = 18. Left = $18. (Key: 1/2 applies to the REMAINING, not the original.)'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A tank holds 600 gallons and is 2/3 full. Then 1/5 of the water in the tank is drained. How much water remains?',
+  '320 gallons',
+  '400 gallons',
+  '280 gallons',
+  '480 gallons',
+  'Water in tank: 2/3 × 600 = 400. After draining 1/5: 400 × 4/5 = 320.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'Jake reads 2/5 of a book on Monday and 1/3 of the REMAINING pages on Tuesday. What fraction of the book is still unread after Tuesday?',
+  '2/5',
+  '3/5',
+  '7/15',
+  '1/5',
+  'After Mon: 1 − 2/5 = 3/5 left. Tue reads 1/3 × 3/5 = 1/5. Still unread = 3/5 − 1/5 = 2/5.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A stick is 4 feet long and must be cut into pieces of 2/3 foot each with no waste. The pieces are sold in groups of 3. How many complete groups can be made?',
+  '2 groups',
+  '3 groups',
+  '6 groups',
+  '4 groups',
+  'Pieces: 4 ÷ 2/3 = 4 × 3/2 = 6. Groups of 3: 6 ÷ 3 = 2 groups.'
+);
+seedQ('NF', 'Fraction Word Problems',
+  'A car\u2019s gas tank holds 15 gallons. It uses 3/4 gallon per hour of driving. How many hours can it run on a full tank?',
+  '20 hours',
+  '12 hours',
+  '18 hours',
+  '11 1/4 hours',
+  '15 ÷ 3/4 = 15 × 4/3 = 60/3 = 20 hours.'
+);
+
+// ── G / 2D Figure Classification (20) ───────────────────────────────────────
+// [MEDIUM]
+seedQ('G', '2D Figure Classification',
+  'How many right angles does a square have?',
+  '4',
+  '2',
+  '3',
+  '0',
+  'All four interior angles of a square measure 90° (right angles).'
+);
+seedQ('G', '2D Figure Classification',
+  'How many sides does a regular pentagon have?',
+  '5',
+  '6',
+  '4',
+  '7',
+  'A pentagon by definition has 5 sides.'
+);
+seedQ('G', '2D Figure Classification',
+  'What is true about all side lengths of an equilateral triangle?',
+  'All three sides are equal',
+  'Two sides are equal, one is different',
+  'All three sides are different',
+  'Two sides must be right angles',
+  'Equilateral means "equal sides" — all three sides are the same length.'
+);
+seedQ('G', '2D Figure Classification',
+  'A rhombus with four right angles is what kind of shape?',
+  'A square',
+  'A rectangle',
+  'A kite',
+  'A parallelogram (not a special one)',
+  'A rhombus has 4 equal sides. Add 4 right angles → it becomes a square.'
+);
+seedQ('G', '2D Figure Classification',
+  'How many pairs of parallel sides does every parallelogram have?',
+  '2 pairs',
+  '1 pair',
+  '3 pairs',
+  '0 pairs',
+  'A parallelogram has 2 pairs of parallel sides (both pairs of opposite sides are parallel).'
+);
+
+// [HIGH]
+seedQ('G', '2D Figure Classification',
+  'A polygon has interior angles that sum to 540°. How many sides does it have?',
+  '5 sides (pentagon)',
+  '4 sides (quadrilateral)',
+  '6 sides (hexagon)',
+  '7 sides (heptagon)',
+  'Sum = (n − 2) × 180. Set (n − 2) × 180 = 540 → n − 2 = 3 → n = 5.'
+);
+seedQ('G', '2D Figure Classification',
+  'A triangle has sides of length 5, 12, and 13. Is it a right triangle?',
+  'Yes — 5² + 12² = 13² (25 + 144 = 169)',
+  'No — the sides are all different',
+  'No — the angles are too big',
+  'Only if it is isosceles',
+  'By the Pythagorean theorem, a right triangle satisfies a² + b² = c². Here 25 + 144 = 169 = 13², so yes.'
+);
+seedQ('G', '2D Figure Classification',
+  'A triangle has angles in the ratio 2:3:7. What type of triangle is it?',
+  'Obtuse scalene',
+  'Acute scalene',
+  'Right isosceles',
+  'Obtuse isosceles',
+  'Sum of parts = 12. Each part = 180/12 = 15°. Angles: 30°, 45°, 105°. 105° > 90° → obtuse. All different → scalene.'
+);
+seedQ('G', '2D Figure Classification',
+  'How many lines of symmetry does a regular hexagon have?',
+  '6 lines',
+  '3 lines',
+  '12 lines',
+  '4 lines',
+  'A regular hexagon has 6 lines: 3 through opposite vertices and 3 through midpoints of opposite sides.'
+);
+seedQ('G', '2D Figure Classification',
+  'Which is a defining property of a rhombus that is NOT always true of a parallelogram?',
+  'All four sides are equal in length',
+  'Opposite sides are parallel',
+  'Opposite angles are equal',
+  'Diagonals bisect each other',
+  'A rhombus is a parallelogram with the extra condition that all 4 sides are equal. The other 3 options are true of every parallelogram.'
+);
+seedQ('G', '2D Figure Classification',
+  'What is the defining property of a trapezoid?',
+  'It has exactly one pair of parallel sides',
+  'It has two pairs of parallel sides',
+  'All four sides are equal',
+  'It has four right angles',
+  'A trapezoid is a quadrilateral with exactly one pair of parallel sides. (Two pairs would make it a parallelogram.)'
+);
+seedQ('G', '2D Figure Classification',
+  'What is the sum of the interior angles of an octagon?',
+  '1,080°',
+  '720°',
+  '900°',
+  '1,440°',
+  '(n − 2) × 180 = (8 − 2) × 180 = 6 × 180 = 1,080°.'
+);
+seedQ('G', '2D Figure Classification',
+  'Which is a defining property of a kite?',
+  'Two pairs of adjacent sides are equal',
+  'All four sides are equal',
+  'Opposite sides are parallel',
+  'All angles are right angles',
+  'A kite has two pairs of consecutive (adjacent) sides equal in length — not opposite sides.'
+);
+seedQ('G', '2D Figure Classification',
+  'A triangle has sides of length 8, 15, and 17. Is it a right triangle?',
+  'Yes — 8² + 15² = 17² (64 + 225 = 289)',
+  'No — the sides are all different',
+  'No — the numbers are too large',
+  'Only if the triangle is equilateral',
+  '64 + 225 = 289 = 17². Pythagorean theorem confirms it is a right triangle.'
+);
+seedQ('G', '2D Figure Classification',
+  'A triangle has angles 30°, 60°, and 90°. What type of triangle is it?',
+  'Right scalene',
+  'Acute scalene',
+  'Right isosceles',
+  'Obtuse scalene',
+  '90° angle → right triangle. All three angles different → scalene.'
+);
+
+// [VERY HIGH]
+seedQ('G', '2D Figure Classification',
+  'Which of these is a property shared by ALL parallelograms?',
+  'Opposite sides are equal and parallel',
+  'All four sides are equal',
+  'All four angles are right angles',
+  'Diagonals are always perpendicular',
+  'Every parallelogram has opposite sides equal and parallel. The other properties only apply to special parallelograms (rhombus, rectangle, square).'
+);
+seedQ('G', '2D Figure Classification',
+  'A triangle has angles in the ratio 1:2:3. What type of triangle is it?',
+  'Right scalene',
+  'Acute scalene',
+  'Obtuse scalene',
+  'Right isosceles',
+  'Sum of parts = 6. Each part = 30°. Angles: 30°, 60°, 90°. 90° → right; all different → scalene.'
+);
+seedQ('G', '2D Figure Classification',
+  'What is the measure of each interior angle of a regular hexagon?',
+  '120°',
+  '108°',
+  '135°',
+  '90°',
+  'Sum = (6 − 2) × 180 = 720°. Each angle = 720 ÷ 6 = 120°.'
+);
+seedQ('G', '2D Figure Classification',
+  'A triangle has sides of length 9, 40, and 41. Is it a right triangle?',
+  'Yes — 9² + 40² = 41² (81 + 1,600 = 1,681)',
+  'No — 9 is too short',
+  'No — none of the sides are equal',
+  'Only if it is equilateral',
+  '81 + 1,600 = 1,681 = 41². The Pythagorean relationship holds, so it is a right triangle.'
+);
+seedQ('G', '2D Figure Classification',
+  'A regular polygon has each interior angle measuring 144°. How many sides does it have?',
+  '10 sides (decagon)',
+  '8 sides (octagon)',
+  '12 sides (dodecagon)',
+  '9 sides (nonagon)',
+  'Interior angle = (n − 2) × 180 / n = 144. Solve: 180n − 360 = 144n → 36n = 360 → n = 10.'
+);
+
+// ── Post-seed corrections: fix answers/explanations on questions that were
+//    seeded earlier with bugs. INSERT OR IGNORE skips rows that already exist,
+//    so we use UPDATE (idempotent) for corrections.
+db.prepare(`
+  UPDATE questions
+  SET answer = '1/10',
+      wrong_a = '1/100',
+      explanation = 'In 3.045 the 4 is in the hundredths place (0.04). In 3.450 the 4 is in the tenths place (0.4). 0.04 ÷ 0.4 = 0.1 = 1/10.'
+  WHERE question = 'The value of the 4 in 3.045 is how many times the value of the 4 in 3.450?'
+`).run();
 
 module.exports = db;
 
