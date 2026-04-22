@@ -141,11 +141,13 @@ export default function HomePage() {
                   const isCorrect  = choice === current.answer;
 
                   let bg = '#f9fafb', border = '1.5px solid #e5e7eb', color = '#111827';
+                  let letterBg = '#e5e7eb', letterColor = '#6b7280';
                   if (submitted || answered) {
-                    if (isCorrect)                    { bg = '#f0fdf4'; border = '2px solid #22c55e'; color = '#166534'; }
-                    else if (isSelected && !isCorrect){ bg = '#fef2f2'; border = '2px solid #ef4444'; color = '#991b1b'; }
+                    if (isCorrect)                    { bg = '#f0fdf4'; border = '2px solid #22c55e'; color = '#166534'; letterBg = '#22c55e'; letterColor = '#fff'; }
+                    else if (isSelected && !isCorrect){ bg = '#fef2f2'; border = '2px solid #ef4444'; color = '#991b1b'; letterBg = '#ef4444'; letterColor = '#fff'; }
                   } else if (isPending) {
                     bg = '#eff6ff'; border = '2px solid #1d4ed8'; color = '#1e40af';
+                    letterBg = '#1d4ed8'; letterColor = '#fff';
                   }
 
                   return (
@@ -156,13 +158,7 @@ export default function HomePage() {
                       onClick={() => setPending(choice)}
                       style={{ ...choiceBtn, background: bg, border, color }}
                     >
-                      <span style={{
-                        ...choiceLetter,
-                        background: (isPending || (submitted && isCorrect) || (answered && isCorrect))
-                          ? (isCorrect ? '#22c55e' : (isSelected ? '#ef4444' : '#1d4ed8'))
-                          : '#e5e7eb',
-                        color: (isPending || (submitted && isCorrect) || (answered && isSelected)) ? '#fff' : '#6b7280',
-                      }}>
+                      <span style={{ ...choiceLetter, background: letterBg, color: letterColor }}>
                         {['A','B','C','D'][idx]}
                       </span>
                       {choice}
