@@ -61,6 +61,14 @@ db.prepare('INSERT OR IGNORE INTO users (id, name, age, email) VALUES (1, ?, 11,
 // ── Unique index on questions (prevents re-insertion on server restart) ───────
 db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_questions_unique ON questions(topic_id, question)');
 
+// ── Migration: add `difficulty` column if missing ─────────────────────────────
+{
+  const cols = db.prepare("PRAGMA table_info(questions)").all().map(c => c.name);
+  if (!cols.includes('difficulty')) {
+    db.exec("ALTER TABLE questions ADD COLUMN difficulty TEXT NOT NULL DEFAULT 'medium'");
+  }
+}
+
 // ── Seed helpers ──────────────────────────────────────────────────────────────
 const insertSubject = db.prepare('INSERT OR IGNORE INTO subjects (name) VALUES (?)');
 const getSubjectId  = db.prepare('SELECT id FROM subjects WHERE name = ?');
@@ -68,17 +76,20 @@ const insertTopic   = db.prepare('INSERT OR IGNORE INTO topics (subject_id, name
 const getTopicId    = db.prepare('SELECT id FROM topics WHERE subject_id = ? AND name = ?');
 const insertQ       = db.prepare(`
   INSERT OR IGNORE INTO questions
-    (topic_id, grade, question, answer, wrong_a, wrong_b, wrong_c, explanation)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    (topic_id, grade, question, answer, wrong_a, wrong_b, wrong_c, explanation, difficulty)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `);
 
-function seedQ(domainName, topicName, question, answer, wrong_a, wrong_b, wrong_c, explanation) {
+function seedQ(domainName, topicName, question, answer, wrong_a, wrong_b, wrong_c, explanation, difficulty = 'medium') {
   insertSubject.run(domainName);
   const subject = getSubjectId.get(domainName);
   insertTopic.run(subject.id, topicName);
   const topic = getTopicId.get(subject.id, topicName);
-  insertQ.run(topic.id, 5, question, answer, wrong_a, wrong_b, wrong_c, explanation);
+  insertQ.run(topic.id, 5, question, answer, wrong_a, wrong_b, wrong_c, explanation, difficulty);
 }
+
+// Convenience wrapper for very-hard "Week 1" questions
+const seedHardQ = (...args) => seedQ(...args, 'very_hard');
 
 // ══════════════════════════════════════════════════════════════════════════════
 // DOMAIN: NBT — Number and Operations: Base Ten
@@ -3037,6 +3048,830 @@ seedQ('G', '2D Figure Classification',
   '12 sides (dodecagon)',
   '9 sides (nonagon)',
   'Interior angle = (n − 2) × 180 / n = 144. Solve: 180n − 360 = 144n → 36n = 360 → n = 10.'
+);
+
+// ═════════════════════════════════════════════════════════════════════════════
+// BATCH 4 — 150 VERY HARD questions for Week 1 (CAASPP test in 2 weeks)
+// 10 per topic × 15 topics. difficulty='very_hard' so the API filter can
+// surface these exclusively when ACTIVE_DIFFICULTY='very_hard'.
+// ═════════════════════════════════════════════════════════════════════════════
+
+// ── NBT / Place Value & Decimals (10) ──────────────────────────────────────────
+seedHardQ('NBT', 'Place Value & Decimals',
+  'In a number, the digit 8 has a value of 80 and the digit 5 has a value of 0.005. How many times greater is the value of the 8 than the value of the 5?',
+  '16,000 times', '1,600 times', '160,000 times', '8,000 times',
+  '80 ÷ 0.005 = 80 × 200 = 16,000. (Each place left/right is ×10, so from thousandths to tens is 5 places: 10⁵ ÷ 10 × something — easier to compute directly.)'
+);
+seedHardQ('NBT', 'Place Value & Decimals',
+  'Which of these, when rounded to the nearest tenth, does NOT round to 5.7?',
+  '5.751', '5.74', '5.65', '5.749',
+  'Look at the hundredths digit. 5.74 → 4<5 → 5.7. 5.65 → 5≥5 → round up to 5.7. 5.749 → 4<5 → 5.7. 5.751 → 5≥5 → 5.8 (does NOT round to 5.7).'
+);
+seedHardQ('NBT', 'Place Value & Decimals',
+  'Order from GREATEST to LEAST: 4.05, 4.5, 4.005, 4.55, 4.055',
+  '4.55, 4.5, 4.055, 4.05, 4.005', '4.5, 4.55, 4.055, 4.05, 4.005', '4.55, 4.5, 4.05, 4.055, 4.005', '4.55, 4.055, 4.5, 4.05, 4.005',
+  'Aligned: 4.550, 4.500, 4.055, 4.050, 4.005. Greatest first.'
+);
+seedHardQ('NBT', 'Place Value & Decimals',
+  'If a digit shifts three places to the LEFT (e.g., from hundredths to tens), its new value is how many times the original?',
+  '1,000 times', '30 times', '100 times', '10,000 times',
+  'Each place left multiplies value by 10. Three places: 10 × 10 × 10 = 1,000.'
+);
+seedHardQ('NBT', 'Place Value & Decimals',
+  'Round 9.995 to the nearest hundredth.',
+  '10.00', '9.99', '9.995', '9.90',
+  'Look at thousandths digit: 5 → round up. 9.99 + 0.01 = 10.00 (cascade carries into the ones place).'
+);
+seedHardQ('NBT', 'Place Value & Decimals',
+  'Which expression equals 60,300.045?',
+  '6×10⁴ + 3×10² + 4×10⁻² + 5×10⁻³', '6×10⁴ + 3×10³ + 4×10⁻¹ + 5×10⁻²', '6×10⁵ + 3×10² + 4×10⁻² + 5×10⁻³', '6×10⁴ + 3×10² + 4×10⁻¹ + 5×10⁻²',
+  '60,000 = 6×10⁴; 300 = 3×10²; 0.04 = 4×10⁻²; 0.005 = 5×10⁻³.'
+);
+seedHardQ('NBT', 'Place Value & Decimals',
+  'How many decimals with EXACTLY two decimal places lie strictly between 0.4 and 0.5?',
+  '9', '10', '11', '8',
+  'Two-decimal-place values strictly between 0.40 and 0.50: 0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49 → 9 values.'
+);
+seedHardQ('NBT', 'Place Value & Decimals',
+  'The value of the 7 in 70.7 is how many times the value of the 7 in 0.07?',
+  '1,000 times', '100 times', '10,000 times', '100,000 times',
+  '7 in 70.7 = 70. 7 in 0.07 = 0.07. 70 ÷ 0.07 = 1,000.'
+);
+seedHardQ('NBT', 'Place Value & Decimals',
+  'A 5-digit number has the digit 3 in the ten-thousands place AND a different 3 in the hundreds place. How many times greater is the leftmost 3 than the other 3?',
+  '100 times', '10 times', '1,000 times', '10,000 times',
+  '30,000 vs 300. 30,000 ÷ 300 = 100.'
+);
+seedHardQ('NBT', 'Place Value & Decimals',
+  'What decimal is exactly halfway between 0.27 and 0.28?',
+  '0.275', '0.27', '0.28', '0.270',
+  'Halfway = (0.27 + 0.28) ÷ 2 = 0.55 ÷ 2 = 0.275.'
+);
+
+// ── NBT / Multi-Digit Operations (10) ──────────────────────────────────────────
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'What is the remainder when 50,000 is divided by 67?',
+  '18', '14', '22', '0',
+  '67 × 746 = 49,982. 50,000 − 49,982 = 18.'
+);
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'Multiply: 506 × 47',
+  '23,782', '23,072', '24,782', '23,672',
+  '506 × 40 = 20,240. 506 × 7 = 3,542. Sum: 20,240 + 3,542 = 23,782.'
+);
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'A school orders 28 books per student for 175 students. How many books total?',
+  '4,900', '4,200', '5,250', '4,890',
+  '28 × 175 = 28 × (200 − 25) = 5,600 − 700 = 4,900.'
+);
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'Find the quotient: 9,856 ÷ 32',
+  '308', '280', '318', '320',
+  '32 × 300 = 9,600. 9,856 − 9,600 = 256. 256 ÷ 32 = 8. Quotient = 308.'
+);
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'Round 6,789,432 to the nearest hundred-thousand.',
+  '6,800,000', '6,700,000', '6,790,000', '7,000,000',
+  'Hundred-thousands digit is 7. Next digit (8) ≥ 5 → round up to 8: 6,800,000.'
+);
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'What is the LARGEST 4-digit number that leaves remainder 7 when divided by 19?',
+  '9,982', '9,975', '9,989', '9,994',
+  '19 × 525 = 9,975. Add 7: 9,982. Adding another 19 gives 10,001 (5 digits), so 9,982 is the largest 4-digit option.'
+);
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'Train A travels 72 mph for 9 hours. Train B travels 65 mph for 11 hours. How many miles farther did Train B travel?',
+  '67 miles', '70 miles', '47 miles', '75 miles',
+  'A: 72 × 9 = 648 mi. B: 65 × 11 = 715 mi. Difference: 715 − 648 = 67.'
+);
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'A library has 3 equal sections of books. Two of those sections together contain exactly 1,176 books. How many books are in the entire library?',
+  '1,764', '588', '2,352', '2,940',
+  'One section = 1,176 ÷ 2 = 588. Library = 3 × 588 = 1,764.'
+);
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'A truck carries 1,250 lb per trip. After 17 full trips and one partial last trip, all 22,400 lb are delivered. How much does the LAST trip carry?',
+  '1,150 lb', '1,250 lb', '950 lb', '22,400 lb',
+  '17 full trips: 17 × 1,250 = 21,250 lb. Last trip carries 22,400 − 21,250 = 1,150 lb.'
+);
+seedHardQ('NBT', 'Multi-Digit Operations',
+  'Compute: 7,328 − (243 × 24) + 1,500',
+  '2,996', '8,828', '4,496', '3,496',
+  '243 × 24 = 5,832. 7,328 − 5,832 = 1,496. 1,496 + 1,500 = 2,996.'
+);
+
+// ── NBT / Decimal Operations (10) ──────────────────────────────────────────────
+seedHardQ('NBT', 'Decimal Operations',
+  'Compute: 4.5 × 0.04',
+  '0.18', '1.8', '0.018', '18',
+  '45 × 4 = 180. Decimal places: 1 + 2 = 3. So 0.180 = 0.18.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  'Compute: 7.2 ÷ 0.06',
+  '120', '12', '1.2', '1,200',
+  'Multiply numerator and denominator by 100: 720 ÷ 6 = 120.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  '(2.5 × 0.4) + (3.6 ÷ 0.9) − 1.5 = ?',
+  '3.5', '5', '4.5', '2.5',
+  '2.5 × 0.4 = 1.0. 3.6 ÷ 0.9 = 4. 1 + 4 − 1.5 = 3.5.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  'What is 0.125 × 0.08?',
+  '0.01', '0.001', '0.1', '0.0001',
+  '125 × 8 = 1,000. Decimal places: 3 + 2 = 5. 0.01000 = 0.01.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  'Compute: (4.8 ÷ 0.6) − (1.5 × 1.2)',
+  '6.2', '6.8', '9.8', '5.2',
+  '4.8 ÷ 0.6 = 8. 1.5 × 1.2 = 1.8. 8 − 1.8 = 6.2.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  'A package weighs 0.45 kg. How much do 24 packages weigh?',
+  '10.8 kg', '1.08 kg', '108 kg', '0.108 kg',
+  '0.45 × 24: 45 × 24 = 1,080. Two decimal places → 10.80 kg.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  'If 4.2 kg of rice costs $25.20, what is the price per kg?',
+  '$6.00', '$6.10', '$5.90', '$0.60',
+  '$25.20 ÷ 4.2 = 252 ÷ 42 = 6. So $6.00 per kg.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  'Compute: 3.6² + 0.4²',
+  '13.12', '16', '13.0', '12.96',
+  '3.6² = 12.96. 0.4² = 0.16. 12.96 + 0.16 = 13.12.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  'A water tank fills at 0.75 L per minute. How long to fill 18 L?',
+  '24 minutes', '13.5 minutes', '18 minutes', '36 minutes',
+  '18 ÷ 0.75 = 1,800 ÷ 75 = 24 minutes.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  '$24.36 is divided equally among 4 friends. How much does each get?',
+  '$6.09', '$6.00', '$6.10', '$24.36',
+  '24.36 ÷ 4 = 6.09 exactly.'
+);
+
+// ── NF / Adding & Subtracting Fractions (10) ───────────────────────────────────
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'Compute: 5/6 + 3/4 − 7/12',
+  '1', '11/12', '1 1/12', '7/12',
+  'LCD = 12. 10/12 + 9/12 − 7/12 = 12/12 = 1.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'What must be added to 4 5/12 to get 7 1/4?',
+  '2 5/6', '3 5/6', '2 8/12', '3 1/3',
+  '7 1/4 − 4 5/12. Convert: 7 3/12 − 4 5/12. Borrow: 6 15/12 − 4 5/12 = 2 10/12 = 2 5/6.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'A water tank had 10 gallons. Mon: 2 3/4 gal used. Tue: 3 5/8 gal added. Wed: 1 1/2 gal used. How much is in the tank?',
+  '9 3/8 gallons', '9 1/8 gallons', '8 7/8 gallons', '9 5/8 gallons',
+  '10 − 2 3/4 = 7 1/4 = 7 2/8. + 3 5/8 = 10 7/8. − 1 1/2 = 10 7/8 − 1 4/8 = 9 3/8.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'The sum of two fractions is 1 1/3. One fraction is 7/12. What is the other?',
+  '3/4', '5/12', '7/12', '1/3',
+  '1 1/3 = 16/12. 16/12 − 7/12 = 9/12 = 3/4.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'Compute: 3 5/8 − 1 11/12',
+  '1 17/24', '2 17/24', '1 7/24', '2 7/24',
+  'LCD = 24. 3 15/24 − 1 22/24. Borrow: 2 39/24 − 1 22/24 = 1 17/24.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'Compute: 7/8 + 5/6 − 11/12 + 1/4',
+  '1 1/24', '23/24', '1/24', '7/8',
+  'LCD = 24. 21/24 + 20/24 − 22/24 + 6/24 = (21+20−22+6)/24 = 25/24 = 1 1/24.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'A recipe needs 2 1/4 cups of flour. Tom adds 3/8 + 1 1/2 + 5/8 cups. Did he add enough?',
+  'He added 1/4 cup MORE than needed', 'He added exactly enough', 'He added 1/4 cup LESS than needed', 'He added 1/2 cup more',
+  '3/8 + 12/8 + 5/8 = 20/8 = 2 1/2. Recipe needs 2 1/4. 2 1/2 − 2 1/4 = 1/4 cup more.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'Compute: 9/10 − 2/15 + 1/6',
+  '14/15', '13/15', '19/30', '1/3',
+  'LCD = 30. 27/30 − 4/30 + 5/30 = 28/30 = 14/15.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'Compute: 5 1/3 − 2 7/8',
+  '2 11/24', '3 11/24', '2 13/24', '3 13/24',
+  'LCD = 24. 5 8/24 − 2 21/24. Borrow: 4 32/24 − 2 21/24 = 2 11/24.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'The sum of three fractions is 2. Two of them are 5/8 and 7/12. What is the third?',
+  '19/24', '5/24', '23/24', '11/24',
+  'LCD = 24. 5/8 = 15/24. 7/12 = 14/24. Sum so far: 29/24. 2 = 48/24. Third = 48/24 − 29/24 = 19/24.'
+);
+
+// ── NF / Multiplying Fractions (10) ────────────────────────────────────────────
+seedHardQ('NF', 'Multiplying Fractions',
+  'What is 4/5 × 3/8 × 5/6?',
+  '1/4', '1/2', '1/8', '3/10',
+  '(4 × 3 × 5) / (5 × 8 × 6) = 60/240 = 1/4.'
+);
+seedHardQ('NF', 'Multiplying Fractions',
+  'A rectangle has length 3 1/4 ft and width 2 1/2 ft. What is its area?',
+  '8 1/8 sq ft', '6 1/2 sq ft', '7 1/8 sq ft', '8 sq ft',
+  '13/4 × 5/2 = 65/8 = 8 1/8.'
+);
+seedHardQ('NF', 'Multiplying Fractions',
+  'What is 2/3 × 3/4 × 8/9?',
+  '4/9', '1/2', '8/27', '4/27',
+  '(2 × 3 × 8) / (3 × 4 × 9) = 48/108 = 4/9.'
+);
+seedHardQ('NF', 'Multiplying Fractions',
+  'Mia ate 1/3 of a pizza. Tom ate 2/5 of what Mia LEFT. What fraction of the original pizza did Tom eat?',
+  '4/15', '2/15', '7/15', '2/8',
+  'Mia left 2/3. Tom ate 2/5 × 2/3 = 4/15.'
+);
+seedHardQ('NF', 'Multiplying Fractions',
+  'What is (1 1/2) × (2 2/3)?',
+  '4', '3', '4 1/2', '2 2/3',
+  '3/2 × 8/3 = 24/6 = 4.'
+);
+seedHardQ('NF', 'Multiplying Fractions',
+  'Compute: 5/6 × 4/5 × 3/4',
+  '1/2', '3/4', '1/3', '12/15',
+  '(5 × 4 × 3) / (6 × 5 × 4) = 60/120 = 1/2.'
+);
+seedHardQ('NF', 'Multiplying Fractions',
+  'A sheet of paper measures 8 1/2 in × 11 in. What is its area?',
+  '93 1/2 sq in', '88 sq in', '99 sq in', '95 sq in',
+  '17/2 × 11 = 187/2 = 93 1/2.'
+);
+seedHardQ('NF', 'Multiplying Fractions',
+  'A bottle is full. After three steps where each step pours out 1/5 (so 4/5 remains each time), what fraction of the original is left?',
+  '64/125', '12/15', '16/25', '4/15',
+  '(4/5)³ = 4³/5³ = 64/125.'
+);
+seedHardQ('NF', 'Multiplying Fractions',
+  'A garden is 9 1/2 ft long and 4 2/3 ft wide. What is its area?',
+  '44 1/3 sq ft', '36 sq ft', '44 sq ft', '45 1/3 sq ft',
+  '19/2 × 14/3 = 266/6 = 44 2/6 = 44 1/3.'
+);
+seedHardQ('NF', 'Multiplying Fractions',
+  'Compute: 3/4 × 2/9 × 6/7',
+  '1/7', '1/14', '6/9', '1/8',
+  '(3 × 2 × 6) / (4 × 9 × 7) = 36/252 = 1/7.'
+);
+
+// ── NF / Dividing Fractions (10) ───────────────────────────────────────────────
+seedHardQ('NF', 'Dividing Fractions',
+  'Compute: 3 3/4 ÷ 5/8',
+  '6', '4', '7 1/2', '3',
+  '15/4 ÷ 5/8 = 15/4 × 8/5 = 120/20 = 6.'
+);
+seedHardQ('NF', 'Dividing Fractions',
+  'How many 2/3-cup servings are in 8 cups?',
+  '12', '5 1/3', '16', '6',
+  '8 ÷ 2/3 = 8 × 3/2 = 24/2 = 12.'
+);
+seedHardQ('NF', 'Dividing Fractions',
+  'Compute: 5/8 ÷ 1/2 ÷ 5/6',
+  '1 1/2', '3/4', '25/96', '2',
+  '5/8 ÷ 1/2 = 5/8 × 2 = 10/8 = 5/4. 5/4 ÷ 5/6 = 5/4 × 6/5 = 6/4 = 3/2 = 1 1/2.'
+);
+seedHardQ('NF', 'Dividing Fractions',
+  'What number, when multiplied by 7/8, gives 1 5/16?',
+  '1 1/2', '1 1/8', '7/8', '2',
+  'x = 1 5/16 ÷ 7/8 = 21/16 × 8/7 = 168/112 = 3/2 = 1 1/2.'
+);
+seedHardQ('NF', 'Dividing Fractions',
+  'Compute: 7/8 ÷ 1 1/4',
+  '7/10', '5/8', '35/32', '7/32',
+  '7/8 ÷ 5/4 = 7/8 × 4/5 = 28/40 = 7/10.'
+);
+seedHardQ('NF', 'Dividing Fractions',
+  'A 6-foot board is cut into pieces 2/3 ft long. How many whole pieces?',
+  '9 pieces', '4 pieces', '6 pieces', '18 pieces',
+  '6 ÷ 2/3 = 6 × 3/2 = 9 pieces.'
+);
+seedHardQ('NF', 'Dividing Fractions',
+  'Compute: (3 1/3) ÷ (2/9)',
+  '15', '6 2/3', '5', '20/27',
+  '10/3 ÷ 2/9 = 10/3 × 9/2 = 90/6 = 15.'
+);
+seedHardQ('NF', 'Dividing Fractions',
+  'If 1/4 of a tank holds 5 1/2 gallons, how many gallons is HALF the tank?',
+  '11 gallons', '22 gallons', '5 1/2 gallons', '13 1/2 gallons',
+  'Full tank = 4 × 5.5 = 22 gal. Half tank = 11 gal.'
+);
+seedHardQ('NF', 'Dividing Fractions',
+  'Divide: 4 ÷ 5/6',
+  '4 4/5', '3 1/3', '5', '24/30',
+  '4 ÷ 5/6 = 4 × 6/5 = 24/5 = 4 4/5.'
+);
+seedHardQ('NF', 'Dividing Fractions',
+  'A roll of ribbon is 7 1/2 yards. Each bow needs 5/6 yard. How many bows can be made?',
+  '9 bows', '6 bows', '7 bows', '12 bows',
+  '15/2 ÷ 5/6 = 15/2 × 6/5 = 90/10 = 9 bows.'
+);
+
+// ── NF / Fraction Word Problems (10) ───────────────────────────────────────────
+seedHardQ('NF', 'Fraction Word Problems',
+  'Amy has $48. She spends 1/4 on a book, then 1/3 of what REMAINS on lunch, then 1/2 of what is left on a gift. How much does she have left?',
+  '$12', '$6', '$24', '$0',
+  'Book: 48 × 3/4 = 36 left. Lunch: 36 × 2/3 = 24 left. Gift: 24 × 1/2 = 12 left.'
+);
+seedHardQ('NF', 'Fraction Word Problems',
+  'A trail is 12 1/4 mi long. Tom hikes 2 3/8 mi on Day 1 and 3 5/6 mi on Day 2. How far is left?',
+  '6 1/24 miles', '6 1/12 miles', '5 23/24 miles', '7 1/24 miles',
+  'Day 1+2 (LCD 24): 2 9/24 + 3 20/24 = 5 29/24 = 6 5/24. 12 1/4 = 12 6/24. 12 6/24 − 6 5/24 = 6 1/24.'
+);
+seedHardQ('NF', 'Fraction Word Problems',
+  'A pool holds 320 gallons when full and is 5/8 full. After 1/4 of THAT water is used, how many gallons remain?',
+  '150 gallons', '200 gallons', '240 gallons', '60 gallons',
+  'Water in pool: 5/8 × 320 = 200 gal. After using 1/4: 200 × 3/4 = 150 gal.'
+);
+seedHardQ('NF', 'Fraction Word Problems',
+  'A factory has 540 widgets. 2/9 are red, 1/3 are blue, and 1/4 of the rest are green. How many are GREEN?',
+  '60 widgets', '240 widgets', '90 widgets', '135 widgets',
+  'Red = 540 × 2/9 = 120. Blue = 540 × 1/3 = 180. Rest = 540 − 300 = 240. Green = 1/4 × 240 = 60.'
+);
+seedHardQ('NF', 'Fraction Word Problems',
+  'Mia jogs 1 1/4 mi each weekday. On Sat & Sun she jogs 2 1/3 mi each day. How many miles does she jog in 4 weeks?',
+  '43 2/3 miles', '40 miles', '25 miles', '44 miles',
+  'Weekday: 5 × 5/4 = 25/4 = 6 1/4 mi. Weekend: 2 × 7/3 = 14/3 = 4 2/3 mi. Per week: 6 1/4 + 4 2/3 (LCD 12) = 6 3/12 + 4 8/12 = 10 11/12. ×4 = 43 8/12 = 43 2/3.'
+);
+seedHardQ('NF', 'Fraction Word Problems',
+  'A farmer plants corn on 3/8 of his land, beans on 1/4, and tomatoes on 1/6. The remaining 45 acres are fallow. How many acres total?',
+  '216 acres', '120 acres', '200 acres', '240 acres',
+  'Planted = 3/8 + 1/4 + 1/6 = 9/24 + 6/24 + 4/24 = 19/24. Fallow = 5/24 of total = 45 acres. Total = 45 × 24/5 = 216.'
+);
+seedHardQ('NF', 'Fraction Word Problems',
+  'Tom reads 1/3 of a book on Mon, 1/4 of what REMAINS on Tue, then 1/2 of what is LEFT on Wed. What fraction of the book is unread after Wed?',
+  '1/4', '1/3', '1/8', '1/12',
+  'After Mon: 2/3 left. After Tue: 3/4 of 2/3 = 1/2 left. After Wed: 1/2 of 1/2 = 1/4 left.'
+);
+seedHardQ('NF', 'Fraction Word Problems',
+  'A box of 240 chocolates: 1/4 are dark, 1/3 are milk, 1/8 are white, the rest are caramel. How many CARAMEL?',
+  '70 chocolates', '50 chocolates', '60 chocolates', '80 chocolates',
+  'Sum non-caramel (LCD 24): 6/24 + 8/24 + 3/24 = 17/24. Caramel = 7/24. 7/24 × 240 = 70.'
+);
+seedHardQ('NF', 'Fraction Word Problems',
+  'Mia and Tom share $84 in the ratio 4:3. Mia spends 5/8 of HER share. How much does Mia have LEFT?',
+  '$18', '$30', '$36', '$48',
+  "Mia's share = 4/7 × 84 = 48. Spent = 5/8 × 48 = 30. Left = 48 − 30 = 18."
+);
+seedHardQ('NF', 'Fraction Word Problems',
+  'A 12-ft pipe is cut into pieces 2/3 ft long. The pieces are bundled in groups of 4. How many COMPLETE bundles?',
+  '4 bundles', '18 bundles', '5 bundles', '6 bundles',
+  '12 ÷ 2/3 = 18 pieces. 18 ÷ 4 = 4 complete bundles (with 2 pieces left over).'
+);
+
+// ── OA / Patterns & Rules (10) ─────────────────────────────────────────────────
+seedHardQ('OA', 'Patterns & Rules',
+  'Pattern: 2, 5, 11, 23, 47, … What is the next term?',
+  '95', '94', '96', '88',
+  'Each term = (previous × 2) + 1. 47 × 2 + 1 = 95.'
+);
+seedHardQ('OA', 'Patterns & Rules',
+  'Rule: if x is even, output x/2; if x is odd, output 3x + 1. Starting from 7, what is the 4th term produced (after 7)?',
+  '17', '11', '34', '22',
+  '7 → 22 (1st) → 11 (2nd) → 34 (3rd) → 17 (4th).'
+);
+seedHardQ('OA', 'Patterns & Rules',
+  'In a sequence, each term is the sum of the previous two. The 3rd term is 8 and the 4th is 13. What is the 1st term?',
+  '3', '5', '13', '8',
+  'T4 = T2 + T3 → 13 = T2 + 8 → T2 = 5. T3 = T1 + T2 → 8 = T1 + 5 → T1 = 3.'
+);
+seedHardQ('OA', 'Patterns & Rules',
+  'Pattern: 1, 4, 9, 16, 25, … What is the 12th term?',
+  '144', '121', '169', '132',
+  'These are perfect squares: nth term = n². 12² = 144.'
+);
+seedHardQ('OA', 'Patterns & Rules',
+  'Pattern A starts at 0 and adds 4 each time (0, 4, 8, 12, …). Pattern B starts at 0 and adds 6 each time (0, 6, 12, 18, …). What is the 10th common term, NOT counting 0?',
+  '120', '60', '144', '240',
+  'Common terms are multiples of LCM(4, 6) = 12. After 0: 12, 24, 36, … 10th is 12 × 10 = 120.'
+);
+seedHardQ('OA', 'Patterns & Rules',
+  'Table: x = 1, 2, 3, 4, 5; y = 5, 11, 17, 23, 29. What is the rule for y?',
+  'y = 6x − 1', 'y = 5x', 'y = 6x', 'y = 5x + 6',
+  'Differences in y are constant (6). Try y = 6x − 1: 1→5, 2→11, 3→17. ✓'
+);
+seedHardQ('OA', 'Patterns & Rules',
+  'What is the 100th term of the pattern 3, 7, 11, 15, …?',
+  '399', '400', '403', '401',
+  'nth term = 3 + (n − 1) × 4 = 4n − 1. 4(100) − 1 = 399.'
+);
+seedHardQ('OA', 'Patterns & Rules',
+  'Pattern: 64, 32, 16, 8, … What is the 8th term?',
+  '1/2', '1', '1/4', '0',
+  'Each term × 1/2. 8th term = 64 × (1/2)⁷ = 64 / 128 = 1/2.'
+);
+seedHardQ('OA', 'Patterns & Rules',
+  'Tree A starts at 0 ft and grows 2 ft/year. Tree B starts at 5 ft and grows 1 ft/year. After how many years are they the same height?',
+  '5 years', '3 years', '7 years', 'They are never the same height',
+  '2y = 5 + y → y = 5. After 5 years both are 10 ft tall.'
+);
+seedHardQ('OA', 'Patterns & Rules',
+  'Pattern: each term = (previous × 3) + 2, starting from 1. List the first 5 terms.',
+  '1, 5, 17, 53, 161', '1, 3, 9, 27, 81', '1, 5, 15, 45, 135', '1, 5, 17, 51, 153',
+  '1 → 1×3+2 = 5 → 5×3+2 = 17 → 17×3+2 = 53 → 53×3+2 = 161.'
+);
+
+// ── OA / Expressions & Order of Operations (10) ────────────────────────────────
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Evaluate: [4² − (2 × 3)] ÷ (5 − 4) + 1',
+  '11', '9', '10', '12',
+  'Innermost: (2×3)=6. [16 − 6] = 10. (5−4)=1. 10 ÷ 1 = 10. 10 + 1 = 11.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Evaluate: 4 × (3 + 2²) − 10 ÷ 2',
+  '23', '18', '25', '14',
+  'Inside: 3 + 2² = 3 + 4 = 7. 4 × 7 = 28. 10 ÷ 2 = 5. 28 − 5 = 23.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Insert parentheses to make this true: 8 + 4 × 3 − 1 = 35',
+  '(8 + 4) × 3 − 1', '(8 + 4) × (3 − 1)', '8 + (4 × 3) − 1', '8 + 4 × (3 − 1)',
+  '(8 + 4) × 3 − 1 = 12 × 3 − 1 = 36 − 1 = 35.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Evaluate: 3³ − 4² × 2 + (10 − 6) ÷ 2',
+  '−3', '11', '−1', '5',
+  '27 − 16×2 + 4÷2 = 27 − 32 + 2 = −3.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Evaluate: ((6 + 2)² − 4²) ÷ (2³ − 4)',
+  '12', '8', '16', '6',
+  '(64 − 16) ÷ (8 − 4) = 48 ÷ 4 = 12.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'What is 5 + 3 × (2² + 4) − 8?',
+  '21', '24', '18', '16',
+  '2² + 4 = 8. 3 × 8 = 24. 5 + 24 − 8 = 21.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Evaluate: 50 − 2 × [6 + (4² − 8)] + 3',
+  '25', '21', '27', '19',
+  'Innermost: 4² − 8 = 16 − 8 = 8. Bracket: 6 + 8 = 14. 50 − 2×14 + 3 = 50 − 28 + 3 = 25.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Which expression equals 20?',
+  '4 + (3² − 1) × 2', '(4 + 3)² − 1 × 2', '4 × 3² − 1 × 2', '4 + 3² − 1 × 2',
+  '4 + (3² − 1) × 2 = 4 + 8 × 2 = 4 + 16 = 20.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Evaluate: 2 × 3² + (5 + 1)² ÷ 4',
+  '27', '36', '18', '21',
+  '2 × 9 = 18. (5+1)² = 36. 36 ÷ 4 = 9. 18 + 9 = 27.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Insert parentheses to make this true: 12 ÷ 4 + 2 × 3 = 6',
+  '12 ÷ (4 + 2) × 3', '(12 ÷ 4 + 2) × 3', '12 ÷ (4 + 2 × 3)', '(12 ÷ 4) + (2 × 3)',
+  '12 ÷ (4 + 2) × 3 = 12 ÷ 6 × 3 = 2 × 3 = 6.'
+);
+
+// ── OA / Numerical Relationships (10) ──────────────────────────────────────────
+seedHardQ('OA', 'Numerical Relationships',
+  'Use the difference-of-squares pattern to compute 97 × 103.',
+  '9,991', '10,000', '9,970', '10,003',
+  '97 × 103 = (100 − 3)(100 + 3) = 100² − 3² = 10,000 − 9 = 9,991.'
+);
+seedHardQ('OA', 'Numerical Relationships',
+  'A car rental costs $25 per day plus $0.15 per mile. What is the cost for 3 days and 120 miles?',
+  '$93', '$90', '$103', '$97',
+  'Cost = 25d + 0.15m. 25(3) + 0.15(120) = 75 + 18 = 93.'
+);
+seedHardQ('OA', 'Numerical Relationships',
+  'Without computing the long way, what is 49 × 51?',
+  '2,499', '2,500', '2,501', '2,449',
+  '(50 − 1)(50 + 1) = 50² − 1 = 2,500 − 1 = 2,499.'
+);
+seedHardQ('OA', 'Numerical Relationships',
+  'Fill in: 6 × 47 = (6 × ___) + (6 × 7)',
+  '40', '47', '30', '7',
+  'Distributive property: 6 × 47 = 6 × (40 + 7) = (6×40) + (6×7).'
+);
+seedHardQ('OA', 'Numerical Relationships',
+  'Compute 23 × 45 by expanding (20+3)(40+5).',
+  '1,035', '1,025', '1,000', '945',
+  '20×40 + 20×5 + 3×40 + 3×5 = 800 + 100 + 120 + 15 = 1,035.'
+);
+seedHardQ('OA', 'Numerical Relationships',
+  'If a × b = 240, and a is doubled while b is halved, what is the new product?',
+  '240', '480', '120', '60',
+  '2a × (b/2) = a × b = 240. The product is unchanged.'
+);
+seedHardQ('OA', 'Numerical Relationships',
+  'Compute 999 × 999 using a shortcut.',
+  '998,001', '999,999', '998,000', '999,001',
+  '(1,000 − 1)² = 1,000² − 2(1,000) + 1 = 1,000,000 − 2,000 + 1 = 998,001.'
+);
+seedHardQ('OA', 'Numerical Relationships',
+  'Without computing, which is greater?',
+  '357 × 8 > 358 × 7', '357 × 8 < 358 × 7', 'They are equal', 'Cannot be determined',
+  '357 × 8 = 2,856 and 358 × 7 = 2,506. Or notice: 357×8 = 357×7 + 357 vs 358×7 = 357×7 + 7. 357 > 7, so 357×8 > 358×7.'
+);
+seedHardQ('OA', 'Numerical Relationships',
+  'A number n is multiplied by 4. The result is 60 more than 3n. What is n?',
+  '60', '30', '15', '20',
+  '4n = 3n + 60 → n = 60.'
+);
+seedHardQ('OA', 'Numerical Relationships',
+  'If 8 × x = 56 and y = x + 5, what is y²?',
+  '144', '49', '64', '169',
+  'x = 56 ÷ 8 = 7. y = 7 + 5 = 12. y² = 144.'
+);
+
+// ── MD / Volume (10) ───────────────────────────────────────────────────────────
+seedHardQ('MD', 'Volume',
+  'A rectangular prism has volume 720 cm³, length 12 cm, and width 6 cm. What is its height?',
+  '10 cm', '12 cm', '6 cm', '60 cm',
+  '720 ÷ (12 × 6) = 720 ÷ 72 = 10.'
+);
+seedHardQ('MD', 'Volume',
+  'If every dimension of a rectangular prism is TRIPLED, the new volume is how many times the original?',
+  '27 times', '9 times', '6 times', '81 times',
+  'Volume scales by the cube of the linear factor: 3³ = 27.'
+);
+seedHardQ('MD', 'Volume',
+  'A cube has surface area 384 in². What is its volume?',
+  '512 in³', '384 in³', '256 in³', '1,024 in³',
+  'Each face area: 384 ÷ 6 = 64. Side: √64 = 8. Volume: 8³ = 512.'
+);
+seedHardQ('MD', 'Volume',
+  'An open-top box has outer dimensions 24 × 16 × 10 cm. The walls are 1 cm thick. What is the interior volume?',
+  '2,772 cm³', '2,520 cm³', '3,840 cm³', '3,168 cm³',
+  'Interior dims: L = 24 − 2 = 22, W = 16 − 2 = 14, H = 10 − 1 = 9 (only the bottom is wall, no top). 22 × 14 × 9 = 2,772.'
+);
+seedHardQ('MD', 'Volume',
+  'A swimming pool measures 25 m × 10 m × 2 m. Water fills it at 0.5 m³ per minute. How long to fill?',
+  '1,000 minutes', '250 minutes', '100 minutes', '500 minutes',
+  'V = 25 × 10 × 2 = 500 m³. Time = 500 ÷ 0.5 = 1,000 min.'
+);
+seedHardQ('MD', 'Volume',
+  'A cube has volume 729 cm³. What is its surface area?',
+  '486 cm²', '81 cm²', '729 cm²', '324 cm²',
+  'Side = ∛729 = 9. SA = 6 × 9² = 6 × 81 = 486.'
+);
+seedHardQ('MD', 'Volume',
+  'An L-shaped solid is made from a 6 × 4 × 3 prism with an attached 2 × 2 × 3 prism. What is the total volume?',
+  '84 cubic units', '60 cubic units', '90 cubic units', '72 cubic units',
+  '6×4×3 = 72. 2×2×3 = 12. 72 + 12 = 84.'
+);
+seedHardQ('MD', 'Volume',
+  'Box A has dimensions 4 × 3 × 2. Box B has every dimension 1.5× as large. How many times greater is Box B’s volume?',
+  '3.375 times', '1.5 times', '4.5 times', '6.75 times',
+  'Volume scales by 1.5³ = 3.375. (A = 24, B = 6 × 4.5 × 3 = 81; 81/24 = 3.375.)'
+);
+seedHardQ('MD', 'Volume',
+  'A water tank measures 8 ft × 6 ft × 5 ft and is 2/5 full. How many cubic feet of water are in it?',
+  '96 ft³', '60 ft³', '144 ft³', '240 ft³',
+  'V = 240 ft³. Water = 2/5 × 240 = 96.'
+);
+seedHardQ('MD', 'Volume',
+  'How many 1/2-cm cubes fit inside a 4 × 3 × 2 cm rectangular prism?',
+  '192 cubes', '24 cubes', '48 cubes', '96 cubes',
+  'Each dimension divided by 1/2 = doubled. 8 × 6 × 4 = 192 cubes.'
+);
+
+// ── MD / Measurement Conversions (10) ──────────────────────────────────────────
+seedHardQ('MD', 'Measurement Conversions',
+  'Convert 4.5 km to centimeters.',
+  '450,000 cm', '4,500 cm', '45,000 cm', '4,500,000 cm',
+  '1 km = 100,000 cm. 4.5 × 100,000 = 450,000.'
+);
+seedHardQ('MD', 'Measurement Conversions',
+  'A leaky faucet drips 2 cups every 15 minutes. How many gallons in a full day? (1 gal = 16 cups)',
+  '12 gallons', '8 gallons', '16 gallons', '24 gallons',
+  'Per hour: 2 × 4 = 8 cups. Per day: 8 × 24 = 192 cups. Gallons: 192 ÷ 16 = 12.'
+);
+seedHardQ('MD', 'Measurement Conversions',
+  'A runner runs 3.2 km in 16 minutes. At the same pace, how long for 12 km?',
+  '60 minutes', '50 minutes', '48 minutes', '75 minutes',
+  'Pace: 16 ÷ 3.2 = 5 min/km. 12 × 5 = 60 minutes.'
+);
+seedHardQ('MD', 'Measurement Conversions',
+  'Convert 5,400 seconds to hours and minutes.',
+  '1 hour 30 minutes', '1 hour 5 minutes', '1 hour 50 minutes', '5 hours 4 minutes',
+  '5,400 ÷ 3,600 = 1.5 hours = 1 hour + 30 min.'
+);
+seedHardQ('MD', 'Measurement Conversions',
+  'On a map, 1 cm represents 25 meters. A road measures 7.5 cm on the map. How many KILOMETERS is the actual road?',
+  '0.1875 km', '187.5 km', '1.875 km', '18.75 km',
+  '7.5 × 25 = 187.5 m. 187.5 ÷ 1,000 = 0.1875 km.'
+);
+seedHardQ('MD', 'Measurement Conversions',
+  'A car travels 270 miles on 9 gallons. About how many KILOMETERS per gallon? (1 mi ≈ 1.609 km)',
+  'About 48.27 km per gallon', 'About 30 km per gallon', 'About 60 km per gallon', 'About 270 km per gallon',
+  'Mpg: 270 ÷ 9 = 30 mi/gal. Km/gal: 30 × 1.609 ≈ 48.27.'
+);
+seedHardQ('MD', 'Measurement Conversions',
+  'A water tank holds 4 gallons. Water enters at 1 cup per 5 minutes. How long to fill? (1 gal = 16 cups)',
+  '320 minutes', '64 minutes', '80 minutes', '240 minutes',
+  '4 gal = 64 cups. 64 cups × 5 min/cup = 320 min.'
+);
+seedHardQ('MD', 'Measurement Conversions',
+  'Add: 2 hours 45 minutes + 1 hour 50 minutes',
+  '4 hours 35 minutes', '3 hours 95 minutes', '3 hours 35 minutes', '4 hours 5 minutes',
+  '45 + 50 = 95 min = 1 hr 35 min. 2 + 1 + 1 = 4 hours, plus 35 min → 4 hr 35 min.'
+);
+seedHardQ('MD', 'Measurement Conversions',
+  'Convert 0.045 kg to milligrams.',
+  '45,000 mg', '4,500 mg', '450 mg', '450,000 mg',
+  '1 kg = 1,000,000 mg. 0.045 × 1,000,000 = 45,000.'
+);
+seedHardQ('MD', 'Measurement Conversions',
+  'A car uses 1 gallon per 24 miles. How many QUARTS of gas to drive 144 miles? (1 gal = 4 qt)',
+  '24 quarts', '6 quarts', '12 quarts', '36 quarts',
+  '144 ÷ 24 = 6 gallons. 6 × 4 = 24 quarts.'
+);
+
+// ── MD / Line Plots with Fractions (10) ────────────────────────────────────────
+seedHardQ('MD', 'Line Plots with Fractions',
+  'Eight rope lengths (ft): 1/3, 1/2, 1/3, 2/3, 5/6, 1/2, 1/6, 2/3. What is the total length?',
+  '4 ft', '3 1/2 ft', '4 1/6 ft', '3 5/6 ft',
+  'LCD = 6. 2/6 + 3/6 + 2/6 + 4/6 + 5/6 + 3/6 + 1/6 + 4/6 = 24/6 = 4.'
+);
+seedHardQ('MD', 'Line Plots with Fractions',
+  'Six pencil lengths (in): 1/4, 3/8, 1/2, 5/8, 3/4, 7/8. The shortest is glued to the longest. What is the combined length?',
+  '1 1/8 in', '5/8 in', '1 1/4 in', '7/8 in',
+  '1/4 + 7/8 = 2/8 + 7/8 = 9/8 = 1 1/8.'
+);
+seedHardQ('MD', 'Line Plots with Fractions',
+  'Five plant heights (cm): 1/3, 5/12, 1/2, 3/4, 2/3. What is the difference between the TALLEST and the SHORTEST?',
+  '5/12 cm', '1/4 cm', '1/2 cm', '7/12 cm',
+  'Tallest = 3/4. Shortest = 1/3. 3/4 − 1/3 = 9/12 − 4/12 = 5/12.'
+);
+seedHardQ('MD', 'Line Plots with Fractions',
+  'Ten string lengths (yd): four at 1/4, three at 1/2, two at 3/4, one at 1. What is the MEAN length?',
+  '1/2 yd', '3/8 yd', '1 yd', '5/4 yd',
+  'Sum = 4(1/4) + 3(1/2) + 2(3/4) + 1 = 1 + 3/2 + 3/2 + 1 = 5. Mean = 5 ÷ 10 = 1/2.'
+);
+seedHardQ('MD', 'Line Plots with Fractions',
+  'Data (cm): 1/8, 1/4, 1/4, 3/8, 3/8, 1/2, 5/8, 7/8. What is the median?',
+  '3/8 cm', '1/4 cm', '1/2 cm', '5/16 cm',
+  'Sorted, 8 values. Median = (4th + 5th)/2 = (3/8 + 3/8)/2 = 3/8.'
+);
+seedHardQ('MD', 'Line Plots with Fractions',
+  'Plant growths (in): 5/8, 3/4, 1/2, 7/8, 5/8. What is the sum of values STRICTLY GREATER than 5/8?',
+  '1 5/8 in', '1 3/8 in', '1 1/4 in', '1 1/2 in',
+  'Greater than 5/8: 3/4 and 7/8. 6/8 + 7/8 = 13/8 = 1 5/8.'
+);
+seedHardQ('MD', 'Line Plots with Fractions',
+  'Six rod lengths (ft): 1 1/4, 1 1/2, 2, 1 3/4, 1 1/2, 2 1/4. What is the total length?',
+  '10 1/4 ft', '10 ft', '9 3/4 ft', '11 ft',
+  'Whole parts: 1+1+2+1+1+2 = 8. Fraction parts (LCD 4): 1/4 + 2/4 + 0 + 3/4 + 2/4 + 1/4 = 9/4 = 2 1/4. Total: 8 + 2 1/4 = 10 1/4.'
+);
+seedHardQ('MD', 'Line Plots with Fractions',
+  'Eight glasses of water (cups): 1/4, 1/2, 1/4, 3/4, 1/4, 1/2, 1/2, 1/4. Total water?',
+  '3 1/4 cups', '3 cups', '3 1/2 cups', '4 cups',
+  'Four 1/4s = 1. Three 1/2s = 1 1/2. One 3/4. Sum: 1 + 1 1/2 + 3/4 = 3 1/4.'
+);
+seedHardQ('MD', 'Line Plots with Fractions',
+  'Five jars hold (L): 2/3, 1/2, 5/6, 1/3, 1/2. What is the total?',
+  '2 5/6 L', '2 1/2 L', '2 2/3 L', '3 L',
+  'LCD = 6. 4/6 + 3/6 + 5/6 + 2/6 + 3/6 = 17/6 = 2 5/6.'
+);
+seedHardQ('MD', 'Line Plots with Fractions',
+  'The mean of 4 values from a line plot is 1/3. Three values are 1/4, 1/2, and 1/6. What is the fourth?',
+  '5/12', '1/3', '7/12', '1/4',
+  'Total = 4 × 1/3 = 4/3 = 16/12. Known sum (LCD 12): 3/12 + 6/12 + 2/12 = 11/12. Fourth = 16/12 − 11/12 = 5/12.'
+);
+
+// ── G / Coordinate Plane (10) ──────────────────────────────────────────────────
+seedHardQ('G', 'Coordinate Plane',
+  'Point P is at (4, −2). After reflecting over the x-axis, then translating 3 right, what are the final coordinates?',
+  '(7, 2)', '(1, 2)', '(7, −2)', '(4, 2)',
+  'Reflect over x-axis: (4, −2) → (4, 2). Translate 3 right: (4+3, 2) = (7, 2).'
+);
+seedHardQ('G', 'Coordinate Plane',
+  'Point P is at (−2, 3). Point Q is at (4, 3). Distance from P to Q?',
+  '6 units', '4 units', '1 unit', '7 units',
+  'Same y-coordinate, so horizontal distance: |4 − (−2)| = 6.'
+);
+seedHardQ('G', 'Coordinate Plane',
+  'A rectangle has vertices (1, 1), (1, 5), (4, 5), (4, 1). What is its area?',
+  '12 square units', '14 square units', '7 square units', '24 square units',
+  'Width = |4 − 1| = 3. Height = |5 − 1| = 4. Area = 3 × 4 = 12.'
+);
+seedHardQ('G', 'Coordinate Plane',
+  'Plot point (3, 4). Reflect over the y-axis. What are the new coordinates?',
+  '(−3, 4)', '(3, −4)', '(−3, −4)', '(4, 3)',
+  'Reflection over y-axis flips the x-sign: (3, 4) → (−3, 4).'
+);
+seedHardQ('G', 'Coordinate Plane',
+  'Reflect (−5, 2) over the x-axis, then over the y-axis. Where is the final point?',
+  '(5, −2)', '(5, 2)', '(−5, 2)', '(−5, −2)',
+  'Over x-axis: (−5, 2) → (−5, −2). Over y-axis: (−5, −2) → (5, −2).'
+);
+seedHardQ('G', 'Coordinate Plane',
+  'A triangle has vertices A(1, 2), B(5, 2), C(5, 5). What is its area?',
+  '6 square units', '12 square units', '7.5 square units', '15 square units',
+  'Right triangle (right angle at B). Legs: AB = 4, BC = 3. Area = (4 × 3)/2 = 6.'
+);
+seedHardQ('G', 'Coordinate Plane',
+  'Point A(2, 3) is translated 5 right and 4 down. Where does it land?',
+  '(7, −1)', '(7, 7)', '(−3, 7)', '(7, 1)',
+  '(2 + 5, 3 − 4) = (7, −1).'
+);
+seedHardQ('G', 'Coordinate Plane',
+  'What is the distance from (1, 4) to (1, −3) on the coordinate plane?',
+  '7 units', '1 unit', '4 units', '5 units',
+  'Same x-coordinate, so vertical distance: |4 − (−3)| = 7.'
+);
+seedHardQ('G', 'Coordinate Plane',
+  'A square has vertices (2, 1), (2, 5), (6, 5), (6, 1). After reflecting over the line x = 4, where is the new square?',
+  'It is the SAME square: (2, 1), (2, 5), (6, 5), (6, 1)', '(6, 1), (6, 5), (10, 5), (10, 1)', '(−2, 1), (−2, 5), (−6, 5), (−6, 1)', '(2, −1), (2, −5), (6, −5), (6, −1)',
+  'Reflection over x=4: x′ = 8 − x. (2,y)→(6,y); (6,y)→(2,y). The vertex set is unchanged — the square maps onto itself.'
+);
+seedHardQ('G', 'Coordinate Plane',
+  'A line segment has endpoints (−3, 2) and (5, 2). What is the midpoint?',
+  '(1, 2)', '(2, 2)', '(1, 0)', '(4, 2)',
+  'Midpoint = ((−3 + 5)/2, (2 + 2)/2) = (1, 2).'
+);
+
+// ── G / 2D Figure Classification (10) ──────────────────────────────────────────
+seedHardQ('G', '2D Figure Classification',
+  'A polygon’s interior angles sum to 1,260°. How many sides does it have?',
+  '9 sides', '7 sides', '8 sides', '10 sides',
+  '(n − 2) × 180 = 1,260 → n − 2 = 7 → n = 9. (Nonagon.)'
+);
+seedHardQ('G', '2D Figure Classification',
+  'A right triangle has legs 7 and 24. What is the length of the hypotenuse?',
+  '25', '17', '31', '26',
+  '7² + 24² = 49 + 576 = 625. √625 = 25.'
+);
+seedHardQ('G', '2D Figure Classification',
+  'Each interior angle of a regular polygon measures 150°. How many sides does it have?',
+  '12 sides', '10 sides', '8 sides', '15 sides',
+  '(n − 2) × 180 / n = 150 → 180n − 360 = 150n → 30n = 360 → n = 12.'
+);
+seedHardQ('G', '2D Figure Classification',
+  'A triangle has angles in the ratio 3:4:5. What type of triangle is it?',
+  'Acute scalene', 'Right scalene', 'Obtuse scalene', 'Acute isosceles',
+  'Sum of parts = 12. Each part = 180/12 = 15°. Angles: 45°, 60°, 75°. All < 90° → acute. All different → scalene.'
+);
+seedHardQ('G', '2D Figure Classification',
+  'A right triangle has legs 9 and 40. What is the hypotenuse?',
+  '41', '49', '31', '50',
+  '9² + 40² = 81 + 1,600 = 1,681 = 41². Hypotenuse = 41.'
+);
+seedHardQ('G', '2D Figure Classification',
+  'Which quadrilateral has exactly TWO pairs of consecutive equal sides but is NOT a rhombus?',
+  'A kite', 'A trapezoid', 'A parallelogram', 'A rectangle',
+  'A kite has two pairs of consecutive equal sides. A rhombus has all four sides equal (so all pairs equal).'
+);
+seedHardQ('G', '2D Figure Classification',
+  'A regular hexagon has side length 6. What is its perimeter?',
+  '36', '12', '18', '24',
+  'A hexagon has 6 sides. Perimeter = 6 × 6 = 36.'
+);
+seedHardQ('G', '2D Figure Classification',
+  'How many lines of symmetry does a regular octagon have?',
+  '8', '4', '16', '6',
+  'A regular n-gon has n lines of symmetry. Octagon: 8.'
+);
+seedHardQ('G', '2D Figure Classification',
+  'Classify the triangle with sides 13, 13, 24 (by sides AND by angles).',
+  'Isosceles obtuse', 'Isosceles right', 'Equilateral', 'Scalene acute',
+  'Two equal sides → isosceles. Test: 13² + 13² = 338 < 24² = 576. Since c² > a² + b², the triangle is OBTUSE.'
+);
+seedHardQ('G', '2D Figure Classification',
+  'An interior angle of a regular polygon measures 162°. How many sides does it have?',
+  '20 sides', '12 sides', '15 sides', '18 sides',
+  '(n − 2) × 180 / n = 162 → 180n − 360 = 162n → 18n = 360 → n = 20. (Icosagon.)'
+);
+
+// ── Batch 4 fill-ins (replace 7 entries that collided with earlier batches via
+//    the UNIQUE(topic_id, question) index). Same difficulty='very_hard'.
+seedHardQ('G', 'Coordinate Plane',
+  'Triangle has vertices at (−1, −1), (3, −1), and (3, 2). What is the area of this triangle?',
+  '6 square units', '12 square units', '7 square units', '5 square units',
+  'Right triangle (right angle at (3, −1)). Legs: horizontal 4 and vertical 3. Area = (4 × 3)/2 = 6.'
+);
+seedHardQ('NBT', 'Decimal Operations',
+  'A box of cereal weighs 0.385 kg. How much do 7 boxes weigh?',
+  '2.695 kg', '2.7 kg', '26.95 kg', '0.2695 kg',
+  '0.385 × 7: 385 × 7 = 2,695. Three decimal places → 2.695.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'Simplify: 11/15 + 7/10 − 4/5',
+  '19/30', '14/30', '9/15', '11/30',
+  'LCD = 30. 22/30 + 21/30 − 24/30 = 19/30.'
+);
+seedHardQ('NF', 'Adding & Subtracting Fractions',
+  'A jug holds 6 1/3 cups. Rio drinks 2 5/6 cups, then 1 1/2 cups are added. How much is in the jug now?',
+  '5 cups', '4 cups', '5 1/2 cups', '4 1/2 cups',
+  '6 1/3 − 2 5/6 + 1 1/2 (LCD 6): 6 2/6 − 2 5/6 = (borrow) 5 8/6 − 2 5/6 = 3 3/6 = 3 1/2. 3 1/2 + 1 1/2 = 5.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Evaluate: (3 + 2)² − 4 × (6 − 2)',
+  '9', '5', '17', '1',
+  '(3+2)² = 25. 4 × (6−2) = 16. 25 − 16 = 9.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Compute: 100 ÷ (5 × 2) + 2³',
+  '18', '12', '28', '16',
+  '5 × 2 = 10. 100 ÷ 10 = 10. 2³ = 8. 10 + 8 = 18.'
+);
+seedHardQ('OA', 'Expressions & Order of Operations',
+  'Compute: 6 + 4 × (3 + 1)² − 8',
+  '62', '56', '64', '70',
+  '(3+1)² = 16. 4 × 16 = 64. 6 + 64 − 8 = 62.'
 );
 
 // ── Post-seed corrections: fix answers/explanations on questions that were
